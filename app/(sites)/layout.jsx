@@ -38,7 +38,7 @@ export default function SiteLayout({ children }) {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute inset-y-[10rem] right-1">
+                    {/* <div className="absolute inset-y-[10rem] right-1">
                         <Button size="icon" variant="secondary" className="relative left-[105px] mb-1" onClick={() => setDisplayTheme(!displayTheme)}><FaCog /></Button>
                         <div 
                         className={cn('p-3 bg-slate-700 rounded-lg',
@@ -58,7 +58,7 @@ export default function SiteLayout({ children }) {
                                 >Light</Badge>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </SidebarProvider>
         </ThemeProvider>

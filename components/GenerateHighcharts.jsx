@@ -9,6 +9,7 @@ import HC_accesibility from "highcharts/modules/accessibility"
 import HC_data from "highcharts/modules/data"
 import HighchartsExporting from 'highcharts/modules/exporting'
 import { Numeral } from "react-numeral"
+import RenderHtml from "./RenderToString"
 
 const HIGHCHART_FONT_FAMILY = 'Roboto'
 const colors = chartColor()
@@ -99,6 +100,10 @@ if (typeof Highcharts === 'object') {
     HC_accesibility(Highcharts)
     HighchartsHeatmap(Highcharts)
     wordCloud(Highcharts)
+}
+
+const numeral = (value) => {
+    return RenderHtml(<Numeral value={value} format="0,0" />)
 }
 
 export default function GenerateHighcharts({
@@ -355,8 +360,14 @@ export default function GenerateHighcharts({
                 },
                 tooltip: {
                     formatter: function() {
-                        let numeral = <Numeral value={this.point.y} format={"0,0"} />
-                        return format(new Date(this.x * 1000), 'EEEE, dd MMM yyyy HH:mm:ss') + '<br/>' + this.series.name + '<br/>Total: <b>' + numeral + '</b>';
+                        return `<div>
+                                    <div>${ format(new Date(this.x * 1000), 'EEEE, dd MMM yyyy HH:mm:ss') }</div>
+                                    <br />
+                                    <span>${ this.series.name }</span>
+                                    <br />
+                                    <br />
+                                    <span>Total: ${ numeral(this.point.y) }<b></b></span>
+                                </div>`
                     }
                 },
                 plotOptions: {
@@ -420,14 +431,14 @@ export default function GenerateHighcharts({
                 },
                 tooltip: {
                     formatter: function() {
-                        let Total = <div>
-                                        <div>{ format(new Date(this.x * 1000), 'EEEE, dd MMM yyyy HH:mm:ss') }</div>
-                                        <br />
-                                        <span>{ this.series.name }</span>
-                                        <br/>
-                                        <span>Total: <b><Numeral value={this.point.y} format={"0,0"} /></b></span>
-                                    </div>
-                        return Total;
+                        return `<div>
+                                    <div>${ format(new Date(this.x * 1000), 'EEEE, dd MMM yyyy HH:mm:ss') }</div>
+                                    <br />
+                                    <span>${ this.series.name }</span>
+                                    <br />
+                                    <br />
+                                    <span>Total: ${ numeral(this.point.y) }<b></b></span>
+                                </div>`
                     }
                 }
             }

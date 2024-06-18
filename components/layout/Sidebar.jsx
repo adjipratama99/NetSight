@@ -25,7 +25,7 @@ export default function Sidebar({ className, ...props }) {
     const { data: session } = useSession()
     const sidebar = useSidebar()
     const dispatch = useSidebarDispatch()
-    const searchParams = useSearchParams()
+    /* const searchParams = useSearchParams()
     const deviceId = searchParams.get('deviceId')
     
     const { data, isLoading, error } = useQuery({
@@ -34,7 +34,7 @@ export default function Sidebar({ className, ...props }) {
             url: '/api/device?dest=getDevices',
             body: {}
         }, true)
-    })
+    }) */
 
     const handleToggleSidebar = () => {
         dispatch({
@@ -44,20 +44,10 @@ export default function Sidebar({ className, ...props }) {
         })
     }
 
-    const serverSelected = (event, reqId) => {
-        event.preventDefault();
-        
-        if(deviceId) { 
-            router.replace('?deviceId='+ reqId +'&from='+ subtractDate(new Date(), 'days', 7) +'&to='+ format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
-        } else {
-            router.push('?deviceId='+ reqId +'&from='+ subtractDate(new Date(), 'days', 7) +'&to='+ format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
-        }
-    }
-
     return (
         <aside
             className={cn(
-                `flex flex-col fixed top-0 bottom-0 z-40 h-[94vh] mt-[1.5rem] ml-[2rem] rounded-xl border border-slate-700 px-2 bg-slate-800 backdrop-blur-lg`,
+                `flex flex-col fixed top-0 bottom-0 z-40 h-[94vh] mt-[1.5rem] ml-[2rem] rounded-xl border border-red-600 px-2 bg-neutral-900 backdrop-blur-lg`,
                 'md:sticky md:from-primary/10',
                 (sidebar.isOpen ? 'min-w-[250px] left-0' : '-left-[250px] w-0 min-w-max'),
                 className
@@ -74,14 +64,14 @@ export default function Sidebar({ className, ...props }) {
                     className="flex items-center gap-3"
                 >
                     {sidebar.isOpen
-                        ? <Title size="sm" variant="primary" />
+                        ? <Title size="sm" variant="danger" />
                         : ''
                     }
                 </Button>
                 <Button
                     variant="outline"
                     className={cn(
-                        "flex items-center justify-center bg-slate-800 hover:bg-slate-700 border-slate-700",
+                        "flex items-center justify-center bg-neutral-900 hover:bg-red-700 border-red-700 hover:text-slate-300",
                         "absolute top-1/2 -right-2",
                         "transform -translate-y-1/2 translate-x-1/2",
                         "size-8 p-0 rounded-full"
@@ -97,7 +87,7 @@ export default function Sidebar({ className, ...props }) {
             <div className="px-2">
                 <UserAvatar />
             </div>
-            <ul className="flex flex-col justify-stretch gap-2 flex-1 w-full md:top-[5rem] max-h-full overflow-scroll px-2">
+            {/* <ul className="flex flex-col justify-stretch gap-2 flex-1 w-full md:top-[5rem] max-h-full overflow-scroll px-2">
                     {
                         isLoading && typeof data === "undefined" ?
                             <div className="flex items-center gap-1">
@@ -150,8 +140,8 @@ export default function Sidebar({ className, ...props }) {
                         :
                         <div className="text-slate-400 text-center">{error || "Device not found."}</div>
                     }
-            </ul>
-            {/* <SidebarMenuList className="flex-1 w-full md:top-[5rem] max-h-full overflow-scroll px-2" /> */}
+            </ul> */}
+            <SidebarMenuList className="flex-1 w-full md:top-[5rem] max-h-full overflow-scroll px-2" />
         </aside>
     )
 }
