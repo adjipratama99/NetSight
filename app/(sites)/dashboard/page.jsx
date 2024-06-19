@@ -36,12 +36,16 @@ export default function DashboardPage() {
     })
 
     const deviceClick = async (deviceId, deviceName) => {
-        const req = await fetchPost({
-            url: '/api/device?dest=getBandwith',
-            body: { deviceId, ...dates }
-        }, true)
+        const existing = devices.find(data => data.id === deviceId)
 
-        setDevices(prev => [...prev, {id: deviceId, name: deviceName, result: req.result}])
+        if(!existing) {
+            const req = await fetchPost({
+                url: '/api/device?dest=getBandwith',
+                body: { deviceId, ...dates }
+            }, true)
+    
+            setDevices(prev => [...prev, {id: deviceId, name: deviceName, result: req.result}])
+        }
     }
 
     const minimizeMaximize = () => setMinimize(prev => !prev)
@@ -71,7 +75,7 @@ export default function DashboardPage() {
                         </div>
                         :
                         !isLoading && data?.result?.length ?
-                            <div className="grid grid-cols-4 gap-2 max-h-[83vh] overflow-y-scroll">
+                            <div className="grid grid-cols-6 gap-2 max-h-[83vh] overflow-y-scroll">
                                 {
                                     data.result.map(device => (
                                         <Card key={device._id} onClick={() => deviceClick(device._id, device.name)} className="cursor-pointer">

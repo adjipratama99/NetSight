@@ -15,7 +15,7 @@ export default function UserAvatar() {
 
     return (
         <div className={cn(
-            "flex items-center justify-between cursor-pointer rounded-md pb-3",
+            "flex items-center justify-between cursor-pointer rounded-md pb-3 gap-2",
             !sidebar.isOpen ? 'px-3' : ''
         )}>
             <div className="flex items-center gap-2">
