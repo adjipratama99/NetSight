@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useMemo, useState } from "react"
 import { useForm } from '@tanstack/react-form'
 import { yupValidator as validatorAdapter } from "@tanstack/yup-form-adapter"
-import { toast } from "sonner"
 import { FaExclamation } from 'react-icons/fa';
 import { Button } from "../ui/button"
 import InputUI from "../customs/forms/input"
@@ -13,6 +12,7 @@ import { Label } from "../ui/label"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { signIn } from 'next-auth/react'
 import { CgSpinner } from 'react-icons/cg';
+import { toast } from 'react-toastify'
 
 function FieldInfo({ field }) {
     return (
@@ -48,10 +48,8 @@ export default function LoginForm() {
                 redirect: false
             })
 
-            console.log(response)
-
             if (response?.error) {
-                toast.error(response?.error, {
+                toast.warn(response?.error, {
                     position: 'top-center',
                     icon: <FaExclamation color="red" />
                 })
