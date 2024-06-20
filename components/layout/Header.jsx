@@ -5,17 +5,13 @@ import Toolbar from '../customs/toolbar'
 import Title from '../customs/title'
 import { useSession } from 'next-auth/react'
 import UserAvatar from './UserAvatar'
-import getMenu from '@/config/menu'
-import { randNumber } from '@/lib/Helper'
-import ListItem from './ListItem'
 import Link from 'next/link'
+import { FaExclamationCircle, FaFileAlt, FaHome } from 'react-icons/fa'
+import { usePathname } from 'next/navigation'
 
 export default function Header({ width, className, ...props }) {
     const { data: session } = useSession()
-    const isAdmin = session?.token?.role === 'admin'
-    const isUser = session?.token?.role === 'user'
-    const isOperator = session?.token?.role === 'operator'
-    const menus = getMenu({ isAdmin, isOperator, isUser })
+    const pathname = usePathname()
 
     return (
         <header className={cn(
@@ -26,6 +22,41 @@ export default function Header({ width, className, ...props }) {
                 <Link
                     href="/"
                 ><Title variant="danger" size="sm" /></Link>
+                <div className="flex items-center gap-4">
+                    <Link
+                        href="/"
+                        className={
+                            cn(
+                                "rounded-lg flex items-center gap-2",
+                                pathname === "/dashboard" ? "text-green-600" : "hover:text-green-500"
+                            )
+                        }
+                    >
+                        <FaHome /> Dashboard
+                    </Link>
+                    <Link
+                        href="/alerts"
+                        className={
+                            cn(
+                                "rounded-lg flex items-center gap-2",
+                                pathname === "/alerts" ? "text-green-500" : "hover:text-green-500"
+                            )
+                        }
+                    >
+                        <FaExclamationCircle /> Alert
+                    </Link>
+                    <Link
+                        href="/reports"
+                        className={
+                            cn(
+                                "rounded-lg flex items-center gap-2",
+                                pathname === "/reports" ? "text-green-500" : "hover:text-green-500"
+                            )
+                        }
+                    >
+                        <FaFileAlt /> Report
+                    </Link>
+                </div>
                 <UserAvatar />
             </Toolbar>
         </header>

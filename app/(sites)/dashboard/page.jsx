@@ -14,12 +14,42 @@ import { FaMapMarker } from "react-icons/fa";
 import { useSidebar } from "@/contexts/useSidebar";
 import AirDatepicker from 'air-datepicker';
 import localeEn from 'air-datepicker/locale/en'
-import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { useMap, Marker, NavigationControl } from "react-map-gl";
 import { Map } from "@/components/customs/maps";
-import { chartColor, maxAnalytics } from "@/lib/Constants";
+import { maxAnalytics } from "@/lib/Constants";
+import { Modal } from "@/components/customs/modal";
 let intervalRefetch = null
+
+const MarkerMap = ({ clickFn, val }) => {
+    return (
+        <Marker
+            latitude={parseFloat(val?.coordinates.lat)}
+            longitude={parseFloat(val?.coordinates.lon)}
+            onClick={() => clickFn(val)}
+        >
+            <span 
+            className="relative flex h-3 w-3 cursor-pointer">
+                <FaMapMarker 
+                    className={
+                        cn(
+                            "absolute animate-ping inline-flex h-full w-full rounded-full",
+                            val.status ? "text-green-500" : 'text-yellow-500'
+                        )
+                    }
+                />
+                <FaMapMarker 
+                    className={
+                        cn(
+                            "relative inline-flex rounded-full",
+                            val.status ? "text-green-500" : 'text-red-500'
+                        )
+                    }
+                />
+            </span>
+        </Marker>
+    )
+}
 
 export default function DashboardPage() {
     const sidebar = useSidebar()
@@ -29,7 +59,9 @@ export default function DashboardPage() {
         startDate: subtractDate(new Date(), 'days', 7),
         endDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
     })
+    const [showPopup, setShowPopup] = useState({})
     const [device, setDevice] = useState(null)
+    const [isFetching, setFetching] = useState(false)
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: [DEVICES_LIST],
@@ -40,6 +72,9 @@ export default function DashboardPage() {
     })
 
     const deviceClick = async (deviceData) => {
+        setFetching(true)
+        const showObj = {...showPopup}
+        setShowPopup({...showObj, [deviceData._id]: true})
         const existing = devices.find(data => data.id === deviceData._id)
         setDevice({ deviceId: deviceData._id, deviceName: deviceData.name })
 
@@ -66,6 +101,8 @@ export default function DashboardPage() {
         } else {
             setDevices(prev => [...prev, {id: params.deviceId, name: deviceName, result: req.result}])
         }
+
+        setFetching(false)
     }
 
     if(data && data?.result.length) {
@@ -119,11 +156,11 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-4">
             <Card>
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
-                    <h1 className="text-md">Devices</h1>
+                    <h1 className="text-md">Device Monitoring</h1>
                 </CardHeader>
                 <CardContent className={
                     cn(
-                        'h-[400px] px-4'
+                        'h-[80vh] px-4'
                     )
                 }>
                     {
@@ -144,41 +181,33 @@ export default function DashboardPage() {
                                 latitude:  -2.8943844,
                                 zoom: 3
                             }}
-                            style={{ width: "100%", height: "380px" }}
+                            style={{ width: "100%", height: "78vh" }}
                             className="rounded-lg"
                         >
                             <NavigationControl />
                             {
                                 data?.result.length ?
-                                    data.result.map(device => (
+                                    data.result.map(val => (
                                         <div 
-                                        key={device._id}
+                                        key={val._id}
                                         >
-                                            <Marker
-                                                latitude={parseFloat(device?.coordinates.lat)}
-                                                longitude={parseFloat(device?.coordinates.lon)}
-                                                onClick={() => deviceClick(device)}
-                                            >
-                                                <span 
-                                                className="relative flex h-3 w-3 cursor-pointer">
-                                                    <FaMapMarker 
-                                                        className={
-                                                            cn(
-                                                                "absolute animate-ping inline-flex h-full w-full rounded-full",
-                                                                device.status ? "text-green-500" : 'text-yellow-500'
-                                                            )
-                                                        }
-                                                    />
-                                                    <FaMapMarker 
-                                                        className={
-                                                            cn(
-                                                                "relative inline-flex rounded-full",
-                                                                device.status ? "text-green-500" : 'text-red-500'
-                                                            )
-                                                        }
-                                                    />
-                                                </span>
-                                            </Marker>
+                                            <Modal 
+                                                open={showPopup[val._id]} 
+                                                trigger={<MarkerMap val={val} clickFn={deviceClick} />}
+                                                onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
+                                                content={
+                                                    !isFetching && devices && devices.length ?
+                                                        <Bandwith
+                                                            devices={devices}
+                                                            data={device}
+                                                            setDevice={setDevices}
+                                                        />
+                                                        : <div className="flex items-center gap-1"><CgSpinner className="animate-spin" />Getting data ...</div>
+                                                } 
+                                                title="Device Monitoring"
+                                                subTitle={"Detail's about "+ val.name +"'s device monitoring."}
+                                                className="w-[70rem] max-w-[70rem]"
+                                            />
                                         </div>
                                     ))
                                 : null
@@ -187,12 +216,12 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-            {
+            {/* {
                 devices.length ?
                     <div className="flex gap-4 flex-col">
                         <div className="grid grid-cols-6">
                             <div className="col-span-5"></div>
-                            <Input type="text" placeholder="Enter date ..." className="dateRange border-red-800 max-w-[250px]"/>
+                            <InputUI type="text" placeholder="Enter date ..." className="dateRange max-w-[250px]"/>
                         </div>
                         {
                             devices.map(device => (
@@ -205,7 +234,7 @@ export default function DashboardPage() {
                         }
                     </div>
                 : null
-            }
+            } */}
         </div>
     )
 }

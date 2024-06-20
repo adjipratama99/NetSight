@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 
-export const inputVariants = cva('rounded-lg bg-neutral-800 text-neutral-300 border-neutral-700 focus:bg-neutral-700 focus:text-neutral-300', {
+export const inputVariants = cva('rounded-lg border-neutral-100', {
         variants: {
             size: {
                 default: 'h-10 text-[16px]',

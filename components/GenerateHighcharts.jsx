@@ -41,24 +41,24 @@ const defaultTheme = {
     xAxis: {
         title: {
             style: {
-                color: '#cbd5e1'
+                color: '#666'
             }
         },
         labels: {
             style: {
-                color: '#cbd5e1'
+                color: '#666'
             }
         }
     },
     yAxis: {
         title: {
             style: {
-                color: '#cbd5e1'
+                color: '#666'
             }
         },
         labels: {
             style: {
-                color: '#cbd5e1'
+                color: '#666'
             }
         }
     },
@@ -74,7 +74,7 @@ const defaultTheme = {
     },
     legend: {
         itemStyle: {
-            color: '#cbd5e1'
+            color: '#666'
         },
         itemHoverStyle: {
             color: '#000'
@@ -82,10 +82,10 @@ const defaultTheme = {
     },
     drilldown: {
         activeAxisLabelStyle: {
-            color: '#cbd5e1'
+            color: '#666'
         },
         activeDataLabelStyle: {
-            color: '#cbd5e1'
+            color: '#666'
         }
     }
 }
@@ -260,13 +260,13 @@ export default function GenerateHighcharts({
                     maxColor: '#096b9a',
                     labels: {
                         style: {
-                            color: '#cbd5e1'
+                            color: '#666'
                         }
                     }
                 },
                 plotOptions: {
                     heatmap: {
-                        borderColor: '#cbd5e1',
+                        borderColor: '#666',
                         dataLabels: {
                             enabled: true,
                         }
@@ -292,7 +292,7 @@ export default function GenerateHighcharts({
                     borderWidth: 1,
                     dataLabels: {
                         enabled: true,
-                        color: '#cbd5e1'
+                        color: '#666'
                     }
                 }]
             }
