@@ -13,7 +13,7 @@ const buttonVariants = cva(
         secondary:
           "bg-slate-600 text-secondary-foreground hover:bg-slate-600/80",
         success:
-          "bg-green-600 text-success-foreground hover:bg-green-600/80",
+          "bg-green-600 text-neutral-100 hover:bg-green-600/80",
         danger:
           "bg-red-500 text-danger-foreground hover:bg-red-600/80 text-slate-100",
         warning:
@@ -23,13 +23,13 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:text-neutral-400",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",
-        xs: "h-6 rounded-md px-3",
+        xs: "h-8 rounded-md px-3",
         sm: "h-[40px] rounded-md px-3",
         md: "h-10 rounded-md px-3",
         lg: "h-11 rounded-md px-8",

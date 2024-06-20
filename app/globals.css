@@ -93,14 +93,18 @@
 }
 
 body {
-  @apply bg-neutral-950 text-slate-300 m-0 p-0;
+  @apply m-0 p-0;
   font-family: "Source Code Pro", monospace;
 }
 
 .bg-card {
-  @apply bg-neutral-900 border-red-800 border
+  @apply bg-neutral-50 border-neutral-200 border text-neutral-800
 }
 
 .mapboxgl-ctrl-logo {
   display: none !important;
+}
+
+.mapboxgl-map {
+  @apply rounded-lg
 }

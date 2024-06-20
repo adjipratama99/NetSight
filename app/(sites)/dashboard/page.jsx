@@ -92,37 +92,38 @@ export default function DashboardPage() {
         setDevices(prev => prev)
         refetchRequest()
 
-        new AirDatepicker(".dateRange", {
-            startDate: dates.startDate,
-            range: true,
-            locale: localeEn,
-            selectedDates: [dates.startDate, dates.endDate],
-            dateFormat: 'yyyy-MM-dd',
-            minDate: format(new Date(), 'yyyy') +'-01-01',
-            maxDate: format(new Date(), 'yyyy-MM-dd'),
-            multipleDatesSeparator: ' - ',
-            onSelect: ({ formattedDate }) => {
-                if(formattedDate.length == 2) {
-                    getBandwith({ 
-                        deviceId: device.deviceId,
-                        startDate: formattedDate[0] + ' '+ format(new Date(), 'HH:mm:ss'),
-                        endDate: formattedDate[1] + ' '+ format(new Date(), 'HH:mm:ss')
-                     }, device.deviceName)
+        if(devices && devices.length) {
+            new AirDatepicker(".dateRange", {
+                startDate: dates.startDate,
+                range: true,
+                locale: localeEn,
+                selectedDates: [dates.startDate, dates.endDate],
+                dateFormat: 'yyyy-MM-dd',
+                minDate: format(new Date(), 'yyyy') +'-01-01',
+                maxDate: format(new Date(), 'yyyy-MM-dd'),
+                multipleDatesSeparator: ' - ',
+                onSelect: ({ formattedDate }) => {
+                    if(formattedDate.length == 2) {
+                        getBandwith({ 
+                            deviceId: device.deviceId,
+                            startDate: formattedDate[0] + ' '+ format(new Date(), 'HH:mm:ss'),
+                            endDate: formattedDate[1] + ' '+ format(new Date(), 'HH:mm:ss')
+                         }, device.deviceName)
+                    }
                 }
-            }
-        })
-    }, [sidebar])
+            })
+        }
+    }, [sidebar, devices])
 
     return (
         <div className="flex flex-col gap-4">
             <Card>
-                <CardHeader className="py-2 px-4 mb-4 flex flex-row items-center justify-between">
+                <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
                     <h1 className="text-md">Devices</h1>
-                    <Input type="text" placeholder="Enter date ..." className="dateRange border-red-800 max-w-[250px]"/>
                 </CardHeader>
                 <CardContent className={
                     cn(
-                        'h-[400px]'
+                        'h-[400px] px-4'
                     )
                 }>
                     {
@@ -143,8 +144,8 @@ export default function DashboardPage() {
                                 latitude:  -2.8943844,
                                 zoom: 3
                             }}
-                            mapStyle="mapbox://styles/mapbox/dark-v11"
                             style={{ width: "100%", height: "380px" }}
+                            className="rounded-lg"
                         >
                             <NavigationControl />
                             {
@@ -189,6 +190,10 @@ export default function DashboardPage() {
             {
                 devices.length ?
                     <div className="flex gap-4 flex-col">
+                        <div className="grid grid-cols-6">
+                            <div className="col-span-5"></div>
+                            <Input type="text" placeholder="Enter date ..." className="dateRange border-red-800 max-w-[250px]"/>
+                        </div>
                         {
                             devices.map(device => (
                                 <Bandwith 

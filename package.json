@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 2303 --hostname 127.0.0.1",
+    "dev": "next dev -p 2304 --hostname 127.0.0.1",
     "build": "next build",
-    "start": "next start -p 2303 --hostname 127.0.0.1",
+    "start": "next start -p 2304 --hostname 127.0.0.1",
     "lint": "next lint"
   },
   "dependencies": {
@@ -45,6 +45,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tanstack/react-form": "^0.21.0",
     "@tanstack/react-query": "^5.45.0",
+    "@tanstack/react-table": "^8.17.3",
     "@tanstack/yup-form-adapter": "^0.21.0",
     "air-datepicker": "^3.5.3",
     "class-variance-authority": "^0.7.0",

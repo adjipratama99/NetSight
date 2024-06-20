@@ -8,3 +8,5 @@ export const THEME_LIGHT = "themeLight"
 
 export const DEVICES_LIST = "devices_list"
 export const BANDWITH_LIST = "bandwith_list"
+
+export const ALERT_LIST= "alert_list"
