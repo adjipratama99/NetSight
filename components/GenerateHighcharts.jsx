@@ -550,5 +550,10 @@ export default function GenerateHighcharts({
 
     if(options) defaultConfig = {...defaultConfig, ...options};
 
-    return <HighchartsReact highcharts={Highcharts} options={defaultConfig} />
+    return <div className="relative h-full">
+        <HighchartsReact 
+        containerProps={{ style: { height: "100%" } }}
+        highcharts={Highcharts} 
+        options={defaultConfig} />
+    </div>
 }

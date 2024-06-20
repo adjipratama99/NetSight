@@ -98,5 +98,9 @@ body {
 }
 
 .bg-card {
-  @apply bg-neutral-900 border-red-600 border
+  @apply bg-neutral-900 border-red-800 border
+}
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
 }

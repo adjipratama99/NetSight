@@ -2,27 +2,13 @@
 
 import Title from "@/components/customs/title";
 import Toolbar from "@/components/customs/toolbar";
-import Header from "@/components/layout/Header";
-import Sidebar from "@/components/layout/Sidebar";
 import UserAvatar from "@/components/layout/UserAvatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { THEME_DARK, THEME_LIGHT } from "@/contexts/actions";
 import { SidebarProvider } from "@/contexts/useSidebar";
-import { ThemeProvider, useTheme, useThemeDispatch } from "@/contexts/useThemePicker";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { FaCog } from "react-icons/fa";
+import { ThemeProvider, useTheme } from "@/contexts/useThemePicker";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function SiteLayout({ children }) {
     const theme = useTheme()
-    const dispatch = useThemeDispatch()
-    const [displayTheme, setDisplayTheme] = useState(false)
-    const changeTheme = (selected) => {
-        dispatch({
-            type: selected
-        })
-    }
 
     return (
         <ThemeProvider>

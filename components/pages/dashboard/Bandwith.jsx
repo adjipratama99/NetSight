@@ -46,14 +46,16 @@ export default function Bandwith({ data, setDevice }) {
                 <FaTimes className="text-red-500 cursor-pointer" onClick={() => closeMonitor(data.id)} />
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-                <GenerateHighcharts type="line" data={data.result} options={{
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        floating: true,
-                        verticalAlign: 'top'
-                    }
-                }} />
+                <div className="h-[300px]">
+                    <GenerateHighcharts type="line" data={data.result} options={{
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            floating: true,
+                            verticalAlign: 'top'
+                        }
+                    }} />
+                </div>
                 <div className="flex gap-4 flex-col ml-[30px]">
                     <div className="grid grid-cols-5 gap-2">
                         <div className="flex items-center gap-1">

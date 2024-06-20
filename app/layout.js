@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import 'air-datepicker/air-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 export const metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME,
