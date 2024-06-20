@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import GenerateHighcharts from "@/components/GenerateHighcharts";
 import { FaSquare, FaTimes } from "react-icons/fa";
 import { chartColor } from "@/lib/Constants";

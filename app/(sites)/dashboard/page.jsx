@@ -57,7 +57,7 @@ export default function DashboardPage() {
     const [devices, setDevices] = useState([])
     const [dates, setDate] = useState({ 
         startDate: subtractDate(new Date(), 'days', 7),
-        endDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+        endDate: subtractDate(new Date(), 'days', 1)
     })
     const [showPopup, setShowPopup] = useState({})
     const [device, setDevice] = useState(null)
@@ -176,15 +176,17 @@ export default function DashboardPage() {
                     }>
                         <Map
                             id="dashboardMap"
+                            mapStyle="mapbox://styles/mapbox/light-v11"
                             initialViewState={{
                                 longitude: 117.5371166,
                                 latitude:  -2.8943844,
-                                zoom: 3
+                                zoom: 4
                             }}
                             style={{ width: "100%", height: "78vh" }}
                             className="rounded-lg"
+                            control={false}
+                            projection="mercator"
                         >
-                            <NavigationControl />
                             {
                                 data?.result.length ?
                                     data.result.map(val => (
