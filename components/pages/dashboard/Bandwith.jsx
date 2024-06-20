@@ -39,6 +39,11 @@ export default function Bandwith({ data, devices, isReport }) {
 
     return (
         <div className="flex flex-col gap-4 bg-neutral-100 p-4 rounded-lg w-full">
+            {
+                isReport ?
+                <div className="text-md mb-4">{ data.deviceName }</div>
+                : null
+            }
             <div className="h-[300px]">
                 <GenerateHighcharts type="line" data={result} options={{
                     legend: {

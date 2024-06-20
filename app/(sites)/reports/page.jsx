@@ -29,7 +29,7 @@ export default function ReportPage() {
     const [isFetching, setFetching] = useState(false)
     const [dates, setDate] = useState({ 
         startDate: subtractDate(new Date(), 'days', 7),
-        endDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+        endDate: subtractDate(new Date(), 'days', 1)
     })
     const { data, isLoading } = useQuery({
         queryKey: [DEVICES_LIST],
@@ -41,6 +41,8 @@ export default function ReportPage() {
 
     const getBandwith = async () => {
         setDevices([])
+
+        console.log(deviceIds)
 
         if(deviceIds && deviceIds.length) {
             if(deviceIds.length !== maxAnalytics) {
@@ -64,8 +66,9 @@ export default function ReportPage() {
 
     const addDeviceId = (deviceId) => {
         const res = data?.result.filter(val => val._id === deviceId)
+        const filter = deviceIds.filter(data => data.id === deviceId)
 
-        if(!deviceIds.includes(deviceId)) setDeviceIds(prev => [...prev, { id: deviceId, deviceName: res[0].name }])
+        if(!filter.length) setDeviceIds(prev => [...prev, { id: deviceId, deviceName: res[0].name }])
     }
 
     useEffect(() => {
@@ -149,7 +152,6 @@ export default function ReportPage() {
                             <div className="flex items-center justify-center flex-col gap-1">
                                 <h1 className="text-xl font-semibold">{ process.env.NEXT_PUBLIC_APP_NAME } Reports</h1>
                                 <div className="text-md">Created at { format(new Date(), 'dd MMM yyyy HH:mm:ss') } by { session?.token?.username }</div>
-                                <div className="text-sm">Report: <span className="font-semibold">{ names.join(', ') }</span></div>
                             </div>
                             {
                                 devices.map((device, ind) => {
