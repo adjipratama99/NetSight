@@ -58,6 +58,15 @@ export default function UpdateDevice({ data, closeEvent }) {
         }
     })
 
+    const deviceChange = (value) => {
+        const currentData = data.result.find(val => val._id === value)
+        form.setFieldValue('name', currentData?.name || '')
+        form.setFieldValue('deviceId', value)
+        form.setFieldValue('deviceType', currentData?.deviceType || '')
+        form.setFieldValue('latitude', currentData?.latitude || '')
+        form.setFieldValue('longitude', currentData?.longitude || '')
+    }
+
     return (
         <form
             onSubmit={(e) => {
@@ -66,6 +75,36 @@ export default function UpdateDevice({ data, closeEvent }) {
                 form.handleSubmit()
             }}
         >
+            <form.Field
+                name="deviceId"
+                validators={{
+                    onChange: yup.string().min(3, 'username must be at least 3 characters'),
+                    onChangeAsyncDebounceMs: 500,
+                    onChangeAsync: async ({ value }) => {
+                        await new Promise(resolve => setTimeout(resolve, 1000))
+                    }
+                }}
+                children={(field) => (
+                    <div className="mb-4">
+                        <Label htmlFor="deviceId">Device </Label>
+                        <Select
+                                id={field.name}
+                                required
+                                fullWidth={true}
+                                name={field.name}
+                                value={field.state.value}
+                                onValueChange={(val) => deviceChange(val, field)}
+                                placeholder="Select device"
+                                options={
+                                    data.result.map(device => { return { "value": device._id, "text": device.name } })
+                                }
+                                />
+                         <FieldInfo field={field} />
+                    </div>
+                )}
+            >
+            </form.Field>
+
             <form.Field
                 name="name"
                 validators={{
@@ -126,36 +165,6 @@ export default function UpdateDevice({ data, closeEvent }) {
                                 }]
                             }
                         />
-                         <FieldInfo field={field} />
-                    </div>
-                )}
-            >
-            </form.Field>
-
-            <form.Field
-                name="deviceId"
-                validators={{
-                    onChange: yup.string().min(3, 'username must be at least 3 characters'),
-                    onChangeAsyncDebounceMs: 500,
-                    onChangeAsync: async ({ value }) => {
-                        await new Promise(resolve => setTimeout(resolve, 1000))
-                    }
-                }}
-                children={(field) => (
-                    <div className="mb-4">
-                        <Label htmlFor="deviceId">Device </Label>
-                        <Select
-                                id={field.name}
-                                required
-                                fullWidth={true}
-                                name={field.name}
-                                value={field.state.value}
-                                onValueChange={(val) => field.handleChange(val)}
-                                placeholder="Select device"
-                                options={
-                                    data.result.map(device => { return { "value": device._id, "text": device.name } })
-                                }
-                                />
                          <FieldInfo field={field} />
                     </div>
                 )}

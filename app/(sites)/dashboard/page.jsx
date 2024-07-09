@@ -221,11 +221,14 @@ export default function DashboardPage() {
                                                             onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
                                                             content={
                                                                 !isFetching && devices && devices.length ?
-                                                                    <Bandwith
-                                                                        devices={devices}
-                                                                        data={device}
-                                                                        setDevice={setDevices}
-                                                                    />
+                                                                    process.env.NEXT_PUBLIC_APP_MAINTENANCE ?
+                                                                        <h1 className="text-red-700">[UNDER MAINTENANCE]</h1>
+                                                                        :
+                                                                        <Bandwith
+                                                                            devices={devices}
+                                                                            data={device}
+                                                                            setDevice={setDevices}
+                                                                        />
                                                                     : <div className="flex items-center gap-1"><CgSpinner className="animate-spin" />Getting data ...</div>
                                                             } 
                                                             title="Device Monitoring"

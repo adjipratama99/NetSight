@@ -42,8 +42,6 @@ export default function ReportPage() {
     const getBandwith = async () => {
         setDevices([])
 
-        console.log(deviceIds)
-
         if(deviceIds && deviceIds.length) {
             if(deviceIds.length !== maxAnalytics) {
                 setFetching(true)
@@ -97,79 +95,86 @@ export default function ReportPage() {
         <div className={
             cn("flex flex-col gap-4")
         }>
-            <div className="flex justify-end gap-2 items-center">
-                {
-                    devices && devices.length ?
-                        <Button variant="secondary" onClick={() => toPDF()} className="flex items-center gap-1"><FaFileAlt />Generate PDF</Button>
-                    : null
-                }
-                <InputUI type="text" className="dateRange w-[250px]" placeholder="Enter date range" />
-            </div>
-            <div className={
-                cn(
-                    "flex gap-6"
-                )
-            }>
-                <div className={cn(
-                    "w-[250px] p-4 bg-neutral-50 rounded-lg"
-                )}>
-                    <h1 className="text-sm border-b-2 mb-4 pb-3">Device List</h1>
-                    {
-                        isLoading && typeof data === "undefined" ?
-                            <div className="flex items-center gap-1">
-                                <CgSpinner className="animate-spin" />Getting devices ...
-                            </div>
-                        :
-                        !isLoading && data?.result?.length ?
-                            <div className="h-[75vh] overflow-y-scroll">
-                                {
-                                    data?.result.map(device => (
-                                        <div className={
-                                            cn(
-                                                "flex items-center gap-2 cursor-pointer text-sm",
-                                                deviceIds.includes(device._id) ? "bg-neutral-100" : "hover:bg-neutral-100"
-                                            )} 
-                                            onClick={() => addDeviceId(device._id)}
-                                            key={device._id}>
-                                            <FaServer className={device.status ? "text-green-500" : "text-red-500"} />
-                                            { device.name }
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        :
-                        <div className="flex items-center gap-2 text-muted"><FaTimes />{ data?.message || "Data not Available." }</div>
-                    }
-                </div>
-                {
-                    isFetching && !devices.length ?
-                    <div className="flex items-center gap-1">
-                        <CgSpinner className="animate-spin" />Getting data ...
+            {
+                process.env.NEXT_PUBLIC_APP_MAINTENANCE ?
+                <h1 className="text-red-700 text-2xl text-center">[UNDER MAINTENANCE]</h1>
+                :
+                <>
+                    <div className="flex justify-end gap-2 items-center">
+                        {
+                            devices && devices.length ?
+                                <Button variant="secondary" onClick={() => toPDF()} className="flex items-center gap-1"><FaFileAlt />Generate PDF</Button>
+                            : null
+                        }
+                        <InputUI type="text" className="dateRange w-[250px]" placeholder="Enter date range" />
                     </div>
-                    :
-                    !isFetching && devices && devices.length ?
-                        <div ref={targetRef} className="w-full flex flex-col gap-4 p-4">
-                            <div className="flex items-center justify-center flex-col gap-1">
-                                <h1 className="text-xl font-semibold">{ process.env.NEXT_PUBLIC_APP_NAME } Reports</h1>
-                                <div className="text-md">Created at { format(new Date(), 'dd MMM yyyy HH:mm:ss') } by { session?.token?.username }</div>
-                            </div>
+                    <div className={
+                        cn(
+                            "flex gap-6"
+                        )
+                    }>
+                        <div className={cn(
+                            "w-[250px] p-4 bg-neutral-50 rounded-lg"
+                        )}>
+                            <h1 className="text-sm border-b-2 mb-4 pb-3">Device List</h1>
                             {
-                                devices.map((device, ind) => {
-                                    const rand = randNumber(10000)
-                                    return (
-                                        <Bandwith
-                                            devices={devices}
-                                            data={deviceIds[ind]}
-                                            isReport={true}
-                                            key={rand}
-                                        />
-                                    )
-                                })
+                                isLoading && typeof data === "undefined" ?
+                                    <div className="flex items-center gap-1">
+                                        <CgSpinner className="animate-spin" />Getting devices ...
+                                    </div>
+                                :
+                                !isLoading && data?.result?.length ?
+                                    <div className="h-[75vh] overflow-y-scroll">
+                                        {
+                                            data?.result.map(device => (
+                                                <div className={
+                                                    cn(
+                                                        "flex items-center gap-2 cursor-pointer text-sm",
+                                                        deviceIds.includes(device._id) ? "bg-neutral-100" : "hover:bg-neutral-100"
+                                                    )} 
+                                                    onClick={() => addDeviceId(device._id)}
+                                                    key={device._id}>
+                                                    <FaServer className={device.status ? "text-green-500" : "text-red-500"} />
+                                                    { device.name }
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                :
+                                <div className="flex items-center gap-2 text-muted"><FaTimes />{ data?.message || "Data not Available." }</div>
                             }
                         </div>
-                    : null
-                }
-            </div>
+                        {
+                            isFetching && !devices.length ?
+                            <div className="flex items-center gap-1">
+                                <CgSpinner className="animate-spin" />Getting data ...
+                            </div>
+                            :
+                            !isFetching && devices && devices.length ?
+                                <div ref={targetRef} className="w-full flex flex-col gap-4 p-4">
+                                    <div className="flex items-center justify-center flex-col gap-1">
+                                        <h1 className="text-xl font-semibold">{ process.env.NEXT_PUBLIC_APP_NAME } Reports</h1>
+                                        <div className="text-md">Created at { format(new Date(), 'dd MMM yyyy HH:mm:ss') } by { session?.token?.username }</div>
+                                    </div>
+                                    {
+                                        devices.map((device, ind) => {
+                                            const rand = randNumber(10000)
+                                            return (
+                                                <Bandwith
+                                                    devices={devices}
+                                                    data={deviceIds[ind]}
+                                                    isReport={true}
+                                                    key={rand}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </div>
+                            : null
+                        }
+                    </div>
+                </>
+            }
         </div>
     )
 }
