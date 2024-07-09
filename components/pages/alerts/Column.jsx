@@ -7,12 +7,6 @@ export const alertColumns = (delFn) => {
   const random = randNumber(10000)
   return [
       {
-        id: "dateCreate-"+ random,
-        accessorKey: "dateCreate",
-        header: "Date Create",
-        cell: props => format(props.getValue(), 'yyyy-MM-dd HH:mm:ss')
-      },
-      {
           id: "username-"+ random,
           accessorKey: "username",
           header: "Username"

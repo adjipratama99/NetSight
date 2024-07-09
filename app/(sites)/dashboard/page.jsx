@@ -19,13 +19,15 @@ import { useMap, Marker, NavigationControl } from "react-map-gl";
 import { Map } from "@/components/customs/maps";
 import { maxAnalytics } from "@/lib/Constants";
 import { Modal } from "@/components/customs/modal";
+import { Button } from "@/components/ui/button";
+import UpdateDevice from "@/components/forms/UpdateDevice";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
     return (
         <Marker
-            latitude={parseFloat(val?.coordinates.lat)}
-            longitude={parseFloat(val?.coordinates.lon)}
+            latitude={parseFloat(val?.latitude)}
+            longitude={parseFloat(val?.longitude)}
             onClick={() => clickFn(val)}
         >
             <span 
@@ -42,7 +44,7 @@ const MarkerMap = ({ clickFn, val }) => {
                     className={
                         cn(
                             "relative inline-flex rounded-full",
-                            val.status ? "text-green-500" : 'text-red-500'
+                            val.status !== 1 ? "text-green-500" : 'text-red-500'
                         )
                     }
                 />
@@ -59,7 +61,7 @@ export default function DashboardPage() {
         startDate: subtractDate(new Date(), 'days', 7),
         endDate: subtractDate(new Date(), 'days', 1)
     })
-    const [showPopup, setShowPopup] = useState({})
+    const [showPopup, setShowPopup] = useState({"update": false})
     const [device, setDevice] = useState(null)
     const [isFetching, setFetching] = useState(false)
 
@@ -108,7 +110,11 @@ export default function DashboardPage() {
     if(data && data?.result.length) {
         const coords = []
 
-        data.result.map(val => coords.push({"lng": val.coordinates.lon, "lat": val.coordinates.lat}))
+        data.result.map(val => {
+            if("latitude" in val && "longitude" in val) {
+                coords.push({"lng": val.longitude, "lat": val.latitude})
+            }
+        })
         const centre = findCenter(coords)
 
         if(MapDevice) {
@@ -152,11 +158,25 @@ export default function DashboardPage() {
         }
     }, [sidebar, devices])
 
+    const handleModalChange = () => {
+        let popup = {...showPopup}
+        popup['update'] = !popup['update']
+        
+        setShowPopup(popup)
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <Card>
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
                     <h1 className="text-md">Device Monitoring</h1>
+                    <Modal 
+                        open={showPopup['update']} 
+                        trigger={<Button size="xs">Update Device</Button>}
+                        onOpenChange={handleModalChange} 
+                        content={<UpdateDevice data={data} closeEvent={handleModalChange} />} 
+                        title="Update Device"
+                    />
                 </CardHeader>
                 <CardContent className={
                     cn(
@@ -189,29 +209,33 @@ export default function DashboardPage() {
                         >
                             {
                                 data?.result.length ?
-                                    data.result.map(val => (
-                                        <div 
-                                        key={val._id}
-                                        >
-                                            <Modal 
-                                                open={showPopup[val._id]} 
-                                                trigger={<MarkerMap val={val} clickFn={deviceClick} />}
-                                                onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
-                                                content={
-                                                    !isFetching && devices && devices.length ?
-                                                        <Bandwith
-                                                            devices={devices}
-                                                            data={device}
-                                                            setDevice={setDevices}
+                                    data.result.map(val => {
+                                        if("latitude" in val && "longitude" in val) {
+                                            return (
+                                                <div 
+                                                    key={val._id}
+                                                    >
+                                                        <Modal 
+                                                            open={showPopup[val._id]} 
+                                                            trigger={<MarkerMap val={val} clickFn={deviceClick} />}
+                                                            onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
+                                                            content={
+                                                                !isFetching && devices && devices.length ?
+                                                                    <Bandwith
+                                                                        devices={devices}
+                                                                        data={device}
+                                                                        setDevice={setDevices}
+                                                                    />
+                                                                    : <div className="flex items-center gap-1"><CgSpinner className="animate-spin" />Getting data ...</div>
+                                                            } 
+                                                            title="Device Monitoring"
+                                                            subTitle={"Detail's about "+ val.name +"'s device monitoring."}
+                                                            className="w-[70rem] max-w-[70rem]"
                                                         />
-                                                        : <div className="flex items-center gap-1"><CgSpinner className="animate-spin" />Getting data ...</div>
-                                                } 
-                                                title="Device Monitoring"
-                                                subTitle={"Detail's about "+ val.name +"'s device monitoring."}
-                                                className="w-[70rem] max-w-[70rem]"
-                                            />
-                                        </div>
-                                    ))
+                                                    </div>
+                                            )
+                                        } 
+                                    })
                                 : null
                             }
                         </Map>
