@@ -57,8 +57,7 @@ export default function UpdateDevice({ data, closeEvent }) {
         async onSubmit({ value }) {
             value.latitude = (value.latitude) ? parseFloat(value.latitude) : value.latitude
             value.longitude = (value.longitude) ? parseFloat(value.longitude) : value.longitude
-            // mutate(value)
-            console.log(value)
+            mutate(value)
         }
     })
 

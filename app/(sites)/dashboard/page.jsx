@@ -7,26 +7,21 @@ import { findCenter, subtractDate } from "@/lib/Helper";
 import { fetchPost } from "@/lib/fetchPost";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
-import { FaMapMarker } from "react-icons/fa";
 import { useSidebar } from "@/contexts/useSidebar";
-import AirDatepicker from 'air-datepicker';
-import localeEn from 'air-datepicker/locale/en'
-import { toast } from "react-toastify";
-import { useMap, Marker, NavigationControl, Popup } from "react-map-gl";
+import { useMap, Marker, Popup } from "react-map-gl";
 import { Map } from "@/components/customs/maps";
-import { maxAnalytics } from "@/lib/Constants";
 import { Modal } from "@/components/customs/modal";
 import { Button } from "@/components/ui/button";
 import UpdateDevice from "@/components/forms/UpdateDevice";
 import CopsIcon from "@/components/customs/icon";
+import InputUI from "@/components/customs/forms/input";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
     const [showPopup, setShowPopup] = useState(false)
-    let Icon = ''
+    
     return (
         <>
         {
@@ -60,14 +55,12 @@ const MarkerMap = ({ clickFn, val }) => {
 export default function DashboardPage() {
     const sidebar = useSidebar()
     const { MapDevice } = useMap()
-    const [devices, setDevices] = useState([])
     const [dates, setDate] = useState({ 
         startDate: subtractDate(new Date(), 'days', 7),
         endDate: subtractDate(new Date(), 'days', 1)
     })
     const [showPopup, setShowPopup] = useState({"update": false})
     const [device, setDevice] = useState(null)
-    const [isFetching, setFetching] = useState(false)
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: [DEVICES_LIST],
@@ -78,37 +71,8 @@ export default function DashboardPage() {
     })
 
     const deviceClick = async (deviceData) => {
-        setFetching(true)
         const showObj = {...showPopup}
         setShowPopup({...showObj, [deviceData._id]: true})
-        const existing = devices.find(data => data.id === deviceData._id)
-        setDevice({ deviceId: deviceData._id, deviceName: deviceData.name })
-
-        if(devices.length === maxAnalytics) {
-            toast.warn('Maximum monitor device opened is '+ maxAnalytics +'. Close one of the monitor to see other device.')
-            return
-        }
-
-        if(!existing) getBandwith({ deviceId: deviceData._id, ...dates }, deviceData.name)
-    }
-
-    const getBandwith = async (params, deviceName) => {
-        const req = await fetchPost({
-            url: '/api/device?dest=getBandwith',
-            body: params
-        }, true)
-
-        const existing = devices.find(data => data.id === params.deviceId)
-
-        if(existing) {
-            let filter = devices.filter(data => data.id !== params.deviceId)
-            filter = [...filter, {id: params.deviceId, name: deviceName, result: req.result}]
-            setDevices(filter)
-        } else {
-            setDevices(prev => [...prev, {id: params.deviceId, name: deviceName, result: req.result}])
-        }
-
-        setFetching(false)
     }
 
     if(data && data?.result.length) {
@@ -136,31 +100,8 @@ export default function DashboardPage() {
     }
 
     useEffect(() => {
-        setDevices(prev => prev)
         refetchRequest()
-
-        if(devices && devices.length) {
-            new AirDatepicker(".dateRange", {
-                startDate: dates.startDate,
-                range: true,
-                locale: localeEn,
-                selectedDates: [dates.startDate, dates.endDate],
-                dateFormat: 'yyyy-MM-dd',
-                minDate: format(new Date(), 'yyyy') +'-01-01',
-                maxDate: format(new Date(), 'yyyy-MM-dd'),
-                multipleDatesSeparator: ' - ',
-                onSelect: ({ formattedDate }) => {
-                    if(formattedDate.length == 2) {
-                        getBandwith({ 
-                            deviceId: device.deviceId,
-                            startDate: formattedDate[0] + ' '+ format(new Date(), 'HH:mm:ss'),
-                            endDate: formattedDate[1] + ' '+ format(new Date(), 'HH:mm:ss')
-                         }, device.deviceName)
-                    }
-                }
-            })
-        }
-    }, [sidebar, devices])
+    }, [sidebar])
 
     const handleModalChange = () => {
         let popup = {...showPopup}
@@ -224,16 +165,10 @@ export default function DashboardPage() {
                                                             trigger={<MarkerMap val={val} clickFn={deviceClick} />}
                                                             onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
                                                             content={
-                                                                !isFetching && devices && devices.length ?
-                                                                    process.env.NEXT_PUBLIC_APP_MAINTENANCE ?
-                                                                        <h1 className="text-red-700">[UNDER MAINTENANCE]</h1>
-                                                                        :
-                                                                        <Bandwith
-                                                                            devices={devices}
-                                                                            data={device}
-                                                                            setDevice={setDevices}
-                                                                        />
-                                                                    : <div className="flex items-center gap-1"><CgSpinner className="animate-spin" />Getting data ...</div>
+                                                                <Bandwith
+                                                                    dates={dates}
+                                                                    currentData={val}
+                                                                />
                                                             } 
                                                             title="Device Monitoring"
                                                             subTitle={"Detail's about "+ val.name +"'s device monitoring."}
@@ -249,25 +184,6 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-            {/* {
-                devices.length ?
-                    <div className="flex gap-4 flex-col">
-                        <div className="grid grid-cols-6">
-                            <div className="col-span-5"></div>
-                            <InputUI type="text" placeholder="Enter date ..." className="dateRange max-w-[250px]"/>
-                        </div>
-                        {
-                            devices.map(device => (
-                                <Bandwith 
-                                key={device.id} 
-                                data={device} 
-                                setDevice={setDevices}
-                                 />
-                            ))
-                        }
-                    </div>
-                : null
-            } */}
         </div>
     )
 }

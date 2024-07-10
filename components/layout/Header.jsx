@@ -25,7 +25,7 @@ export default function Header({ width, className, ...props }) {
                     <Link
                         href="/"
                     ><Title variant="danger" size="sm" /></Link>
-                    <div class="flex md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse">
+                    <div className="flex md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse">
                         <button 
                             data-collapse-toggle="navbar-default" 
                             type="button" 
