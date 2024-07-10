@@ -15,7 +15,7 @@ import { useSidebar } from "@/contexts/useSidebar";
 import AirDatepicker from 'air-datepicker';
 import localeEn from 'air-datepicker/locale/en'
 import { toast } from "react-toastify";
-import { useMap, Marker, NavigationControl } from "react-map-gl";
+import { useMap, Marker, NavigationControl, Popup } from "react-map-gl";
 import { Map } from "@/components/customs/maps";
 import { maxAnalytics } from "@/lib/Constants";
 import { Modal } from "@/components/customs/modal";
@@ -24,32 +24,50 @@ import UpdateDevice from "@/components/forms/UpdateDevice";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
+    const [showPopup, setShowPopup] = useState(false)
+
     return (
-        <Marker
-            latitude={parseFloat(val?.latitude)}
-            longitude={parseFloat(val?.longitude)}
-            onClick={() => clickFn(val)}
-        >
-            <span 
-            className="relative flex h-3 w-3 cursor-pointer">
-                <FaMapMarker 
-                    className={
-                        cn(
-                            "absolute animate-ping inline-flex h-full w-full rounded-full",
-                            val.status ? "text-green-500" : 'text-yellow-500'
-                        )
-                    }
-                />
-                <FaMapMarker 
-                    className={
-                        cn(
-                            "relative inline-flex rounded-full",
-                            val.status !== 1 ? "text-green-500" : 'text-red-500'
-                        )
-                    }
-                />
-            </span>
-        </Marker>
+        <>
+        {
+            showPopup && (
+                <Popup
+                    anchor="top"
+                    latitude={parseFloat(val?.latitude)}
+                    longitude={parseFloat(val?.longitude)}
+                >
+                    {val?.name}
+                </Popup>
+            )
+        }
+            <Marker
+                latitude={parseFloat(val?.latitude)}
+                longitude={parseFloat(val?.longitude)}
+                onClick={() => clickFn(val)}
+            >
+                    <span 
+                        className="relative flex h-3 w-3 cursor-pointer"
+                        onMouseEnter={() => setShowPopup(true)}
+                        onMouseLeave={() => setShowPopup(false)}
+                    >
+                        <FaMapMarker 
+                            className={
+                                cn(
+                                    "absolute animate-ping inline-flex h-full w-full rounded-full",
+                                    val.status ? "text-green-500" : 'text-yellow-500'
+                                )
+                            }
+                        />
+                        <FaMapMarker 
+                            className={
+                                cn(
+                                    "relative inline-flex rounded-full",
+                                    val.status !== 1 ? "text-green-500" : 'text-red-500'
+                                )
+                            }
+                        />
+                    </span>
+            </Marker>
+        </>
     )
 }
 

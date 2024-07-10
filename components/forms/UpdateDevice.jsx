@@ -10,6 +10,8 @@ import { Button } from "../ui/button";
 import { yupValidator as validatorAdapter } from "@tanstack/yup-form-adapter";
 import * as yup from 'yup'
 import { Select } from "../customs/forms/select";
+import ComboBox from "../customs/forms/combobox";
+import { useState } from "react";
 
 function FieldInfo({ field }) {
     return (
@@ -25,6 +27,7 @@ function FieldInfo({ field }) {
 }
 
 export default function UpdateDevice({ data, closeEvent }) {
+    const [comboOpen, setComboOpen] = useState(false)
     const queryClient = useQueryClient()
     const { mutate, isPending } = useMutation({
         mutationFn: (params) => fetchPost({
@@ -54,17 +57,20 @@ export default function UpdateDevice({ data, closeEvent }) {
         async onSubmit({ value }) {
             value.latitude = (value.latitude) ? parseFloat(value.latitude) : value.latitude
             value.longitude = (value.longitude) ? parseFloat(value.longitude) : value.longitude
-            mutate(value)
+            // mutate(value)
+            console.log(value)
         }
     })
 
-    const deviceChange = (value) => {
+    const deviceChange = (selected) => {
+        let value = selected.split('-')[0]
         const currentData = data.result.find(val => val._id === value)
-        form.setFieldValue('name', currentData?.name || '')
-        form.setFieldValue('deviceId', value)
-        form.setFieldValue('deviceType', currentData?.deviceType || '')
-        form.setFieldValue('latitude', currentData?.latitude || '')
-        form.setFieldValue('longitude', currentData?.longitude || '')
+        form.setFieldValue('name', currentData?.name || '', { touch: true })
+        form.setFieldValue('deviceId', value, { touch: true })
+        form.setFieldValue('deviceType', currentData?.deviceType || '', { touch: true })
+        form.setFieldValue('latitude', currentData?.latitude || '', { touch: true })
+        form.setFieldValue('longitude', currentData?.longitude || '', { touch: true })
+        setComboOpen(false)
     }
 
     return (
@@ -78,16 +84,26 @@ export default function UpdateDevice({ data, closeEvent }) {
             <form.Field
                 name="deviceId"
                 validators={{
-                    onChange: yup.string().min(3, 'username must be at least 3 characters'),
-                    onChangeAsyncDebounceMs: 500,
-                    onChangeAsync: async ({ value }) => {
-                        await new Promise(resolve => setTimeout(resolve, 1000))
-                    }
+                    onSelect: yup.string().min(3, 'username must be at least 3 characters')
                 }}
                 children={(field) => (
                     <div className="mb-4">
                         <Label htmlFor="deviceId">Device </Label>
-                        <Select
+                        <ComboBox
+                            fullWidth
+                            id={field.name}
+                            required
+                            name={field.name}
+                            value={field.state.value}
+                            onSelect={(val) => deviceChange(val)}
+                            placeholder="Select device"
+                            open={comboOpen}
+                            onOpenChange={setComboOpen}
+                            opts={
+                                data.result.map(device => { return { "value": device._id +'-'+ device.name, "label": device.name } })
+                            }
+                        />
+                        {/* <Select
                                 id={field.name}
                                 required
                                 fullWidth={true}
@@ -98,7 +114,7 @@ export default function UpdateDevice({ data, closeEvent }) {
                                 options={
                                     data.result.map(device => { return { "value": device._id, "text": device.name } })
                                 }
-                                />
+                                /> */}
                          <FieldInfo field={field} />
                     </div>
                 )}

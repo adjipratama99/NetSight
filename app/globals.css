@@ -108,3 +108,20 @@ body {
 .mapboxgl-map {
   @apply rounded-lg
 }
+
+.popover-full-width {
+  width: var(--radix-popover-trigger-width);
+  max-height: var(--radix-popover-content-available-height)
+}
+
+.mapboxgl-popup-content {
+  @apply py-2 !important
+}
+
+.mapboxgl-popup-content div {
+  @apply mt-2
+}
+
+.mapboxgl-popup-close-button {
+  @apply pr-1 !important
+}
