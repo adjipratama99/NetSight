@@ -21,11 +21,12 @@ import { maxAnalytics } from "@/lib/Constants";
 import { Modal } from "@/components/customs/modal";
 import { Button } from "@/components/ui/button";
 import UpdateDevice from "@/components/forms/UpdateDevice";
+import CopsIcon from "@/components/customs/icon";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
     const [showPopup, setShowPopup] = useState(false)
-
+    let Icon = ''
     return (
         <>
         {
@@ -49,22 +50,7 @@ const MarkerMap = ({ clickFn, val }) => {
                         onMouseEnter={() => setShowPopup(true)}
                         onMouseLeave={() => setShowPopup(false)}
                     >
-                        <FaMapMarker 
-                            className={
-                                cn(
-                                    "absolute animate-ping inline-flex h-full w-full rounded-full",
-                                    val.status === 1 ? "text-green-500" : 'text-yellow-500'
-                                )
-                            }
-                        />
-                        <FaMapMarker 
-                            className={
-                                cn(
-                                    "relative inline-flex rounded-full",
-                                    val.status === 1 ? "text-green-500" : 'text-red-500'
-                                )
-                            }
-                        />
+                        <CopsIcon data={val} />
                     </span>
             </Marker>
         </>
