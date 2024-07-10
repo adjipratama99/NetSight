@@ -61,7 +61,7 @@ const MarkerMap = ({ clickFn, val }) => {
                             className={
                                 cn(
                                     "relative inline-flex rounded-full",
-                                    val.status !== 1 ? "text-green-500" : 'text-red-500'
+                                    val.status === 1 ? "text-green-500" : 'text-red-500'
                                 )
                             }
                         />
