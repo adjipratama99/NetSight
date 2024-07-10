@@ -1,6 +1,5 @@
 "use client"
 
-import InputUI from "@/components/customs/forms/input";
 import { DEVICES_LIST } from "@/contexts/actions";
 import { asyncCounter, randNumber, sleep, subtractDate } from "@/lib/Helper";
 import { fetchPost } from "@/lib/fetchPost";
@@ -9,8 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { FaFileAlt, FaServer, FaTimes } from "react-icons/fa";
-import localeEn from 'air-datepicker/locale/en'
-import AirDatepicker from 'air-datepicker';
 import { format } from "date-fns";
 import Bandwith from "@/components/pages/dashboard/Bandwith";
 import { maxAnalytics } from "@/lib/Constants";
@@ -18,7 +15,8 @@ import { toast } from "react-toastify";
 import { usePDF } from "react-to-pdf";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
-
+import { DateRangePicker } from "rsuite";
+const { allowedRange } = DateRangePicker
 
 export default function ReportPage() {
     const { data: session } = useSession()
@@ -71,24 +69,6 @@ export default function ReportPage() {
 
     useEffect(() => {
         getBandwith()
-
-        new AirDatepicker(".dateRange", {
-            startDate: dates.startDate,
-            range: true,
-            locale: localeEn,
-            selectedDates: [dates.startDate, dates.endDate],
-            dateFormat: 'yyyy-MM-dd',
-            minDate: format(new Date(), 'yyyy') +'-01-01',
-            maxDate: format(new Date(), 'yyyy-MM-dd'),
-            multipleDatesSeparator: ' - ',
-            onSelect: ({ formattedDate }) => {
-                if(formattedDate.length == 2) {
-                    setDate({ startDate: formattedDate[0], endDate: formattedDate[1] })
-                    sleep(1000)
-                    getBandwith()
-                }
-            }
-        })
     }, [deviceIds])
 
     return (
@@ -106,7 +86,17 @@ export default function ReportPage() {
                                 <Button variant="secondary" onClick={() => toPDF()} className="flex items-center gap-1"><FaFileAlt />Generate PDF</Button>
                             : null
                         }
-                        <InputUI type="text" className="dateRange w-[250px]" placeholder="Enter date range" />
+                        <DateRangePicker
+                            defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
+                            block
+                            disabledDate={allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss'))}
+                            onOk={(value) => {
+                                setDate({ startDate: formattedDate[0], endDate: formattedDate[1] })
+                                sleep(1000)
+                                getBandwith()
+                            }}
+                            className="w-[250px]"
+                        />
                     </div>
                     <div className={
                         cn(
