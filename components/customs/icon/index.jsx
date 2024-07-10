@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { FaUserAlt, FaUserAstronaut, FaUserNurse, FaUserSecret } from "react-icons/fa";
+import { FaUserAlt, FaUserNurse, FaUserSecret } from "react-icons/fa";
 
 export default function CopsIcon ({
     data

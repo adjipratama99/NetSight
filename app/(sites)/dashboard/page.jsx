@@ -16,9 +16,7 @@ import { Modal } from "@/components/customs/modal";
 import { Button } from "@/components/ui/button";
 import UpdateDevice from "@/components/forms/UpdateDevice";
 import CopsIcon from "@/components/customs/icon";
-import InputUI from "@/components/customs/forms/input";
 import { FaUserAlt, FaUserNurse, FaUserSecret } from "react-icons/fa";
-import { useSession } from "next-auth/react";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
@@ -55,8 +53,6 @@ const MarkerMap = ({ clickFn, val }) => {
 }
 
 export default function DashboardPage() {
-	const { data: session } = useSession();
-    console.log(session)
     const sidebar = useSidebar()
     const { MapDevice } = useMap()
     const [dates, setDate] = useState({ 
