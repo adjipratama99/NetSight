@@ -140,7 +140,7 @@ export default function LoginForm() {
             <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                    <Button type="submit" disabled={!canSubmit || isSuccess} className="w-[360px]">
+                    <Button type="submit" disabled={!canSubmit || isSuccess} className="w-full">
                         {isSubmitting
                             ?  (<> <CgSpinner className="mr-2 animate-spin" /> Loading... </>)
                             : isSuccess ?

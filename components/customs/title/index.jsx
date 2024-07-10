@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 import { cva } from "class-variance-authority"
 
 const titleVariants = cva(
-    "mb-4 rounded-lg bg-slate-400 bg-gradient-to-r font-bold text-white mix-blend-screen px-4 py-1", {
+    "mb-4 rounded-lg bg-slate-400 bg-gradient-to-r font-bold text-white screen px-4 py-1", {
         variants: {
             variant: {
                 default: "from-slate-600 to-slate-800 to-slate-900",
