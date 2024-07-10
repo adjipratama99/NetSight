@@ -11,7 +11,7 @@ export default function LoginPage() {
             <Card className="w-[350px] md:max-2xl:w-[400px]">
                 <CardContent className="p-4">
                     <h1 className="text-3xl mb-4">Sign In</h1>
-                    <div className="text-slate-300 text-sm mb-6">Enter your username and password to Sign-in.</div>
+                    <div className="text-slate-700 text-sm mb-6">Enter your username and password to Sign-in.</div>
                     <LoginForm />
                 </CardContent>
             </Card>

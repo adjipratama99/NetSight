@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import UpdateDevice from "@/components/forms/UpdateDevice";
 import CopsIcon from "@/components/customs/icon";
 import InputUI from "@/components/customs/forms/input";
+import { FaUserAlt, FaUserNurse, FaUserSecret } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
@@ -53,6 +55,8 @@ const MarkerMap = ({ clickFn, val }) => {
 }
 
 export default function DashboardPage() {
+	const { data: session } = useSession();
+    console.log(session)
     const sidebar = useSidebar()
     const { MapDevice } = useMap()
     const [dates, setDate] = useState({ 
@@ -114,6 +118,20 @@ export default function DashboardPage() {
             <Card>
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
                     <h1 className="text-md">Device Monitoring</h1>
+                    <div className="flex items-center gap-5">
+                        <div className="flex items-center gap-1">
+                            <FaUserAlt className="text-violet-600" />
+                            Polsek
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <FaUserSecret className="text-green-600" />
+                            Polda
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <FaUserNurse className="text-cyan-600" />
+                            Polres
+                        </div>
+                    </div>
                     <Modal 
                         open={showPopup['update']} 
                         trigger={<Button size="xs">Update Device</Button>}

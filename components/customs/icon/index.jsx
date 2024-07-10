@@ -11,7 +11,7 @@ export default function CopsIcon ({
                     className={
                         cn(
                             "absolute animate-ping inline-flex h-full w-full rounded-full",
-                            parseInt(data.status) === 1 ? "text-lime-600" : 'text-yellow-600'
+                            parseInt(data.status) === 1 ? "text-violet-600" : 'text-yellow-600'
                         )
                     }
                 />
@@ -19,7 +19,7 @@ export default function CopsIcon ({
                     className={
                         cn(
                             "relative inline-flex rounded-full",
-                            parseInt(data.status) === 1 ? "text-lime-600" : 'text-red-600'
+                            parseInt(data.status) === 1 ? "text-violet-600" : 'text-red-600'
                         )
                     }
                 />
