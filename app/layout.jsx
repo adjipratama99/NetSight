@@ -4,8 +4,8 @@ import SessionProvider from "@/components/SessionProvider"
 import { authOptions } from "./api/auth/[...nextauth]/route"
 import ReactQueryClientProvider from "@/components/ReactQueryClientProvider";
 import { cn } from "@/lib/utils";
-import 'air-datepicker/air-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'rsuite/DateRangePicker/styles/index.css';
 import { ToastContainer } from "react-toastify";
 
 export const metadata = {

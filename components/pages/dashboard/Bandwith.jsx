@@ -1,15 +1,14 @@
 import GenerateHighcharts from "@/components/GenerateHighcharts";
 import { FaSquare, FaTimes } from "react-icons/fa";
 import { chartColor } from "@/lib/Constants";
-import { formatBytes, percentageOf } from "@/lib/Helper";
+import { formatBytes, percentageOf, subtractDate } from "@/lib/Helper";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPost } from "@/lib/fetchPost";
 import { BANDWITH_LIST } from "@/contexts/actions";
-import AirDatepicker from "air-datepicker";
-import localeEn from 'air-datepicker/locale/en'
-import { format } from "date-fns";
-import InputUI from "@/components/customs/forms/input";
+import { DateRangePicker } from "rsuite";
+import { format, parseISO } from "date-fns";
+const { allowedRange } = DateRangePicker
 
 export default function Bandwith({ currentData, dates, isReport }) {
     const [total, setTotal] = useState([]),
@@ -18,8 +17,8 @@ export default function Bandwith({ currentData, dates, isReport }) {
     [min, setMin] = useState([])
     const [bodyParams, setBodyParams] = useState({ "deviceId": currentData?._id, ...dates })
 
-    const { data, isLoading, refetch } = useQuery({
-        queryKey: [BANDWITH_LIST],
+    const { data, isLoading } = useQuery({
+        queryKey: [BANDWITH_LIST, bodyParams],
         queryFn: () => fetchPost({
             url: '/api/device?dest=getBandwith',
             body: bodyParams
@@ -52,44 +51,26 @@ export default function Bandwith({ currentData, dates, isReport }) {
 
     useEffect(() => {
         getSummary()
-
-        if(data && data?.result?.series.length) {
-            new AirDatepicker(".dateRange", {
-                startDate: dates.startDate,
-                range: true,
-                locale: localeEn,
-                selectedDates: [dates.startDate, dates.endDate],
-                dateFormat: 'yyyy-MM-dd',
-                minDate: format(new Date(), 'yyyy') +'-01-01',
-                maxDate: format(new Date(), 'yyyy-MM-dd'),
-                multipleDatesSeparator: ' - ',
-                isMobile: true,
-                visible: false,
-                onSelect: ({ formattedDate }) => {
-                    if(formattedDate.length == 2) {
-                        let params = {...bodyParams, 
-                            startDate: formattedDate[0] + ' '+ format(new Date(), 'HH:mm:ss'),
-                            endDate: formattedDate[1] + ' '+ format(new Date(), 'HH:mm:ss')
-                        }
-                        setBodyParams(params)
-                        refetch()
-                    }
-                }
-            })
-        }
     }, [data])
 
     return (
         <div className="flex flex-col gap-4 bg-neutral-100 p-4 rounded-lg w-full">
-            <InputUI 
-                type="text" 
-                placeholder="Enter date ..." 
-                className="dateRange max-w-[250px] mr-5"
-                size="xs"
-            />
+            <div className="flex justify-end">
+                <DateRangePicker
+                    defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
+                    block
+                    disabledDate={allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss'))}
+                    onOk={(value) => {
+                        let params = {...bodyParams, startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss')}
+                        setBodyParams(params)
+                    }}
+                    className="w-[250px]"
+                />
+            </div>
+
             {
                 process.env.NEXT_PUBLIC_APP_MAINTENANCE ?
-                    <div className="text-2xl text-red-700">[UNDER MAINTENANCE]</div>
+                    <div className="text-2xl text-center text-red-700">[UNDER MAINTENANCE]</div>
                 :
                 <>
                     {

@@ -60,7 +60,6 @@ export default function DashboardPage() {
         endDate: subtractDate(new Date(), 'days', 1)
     })
     const [showPopup, setShowPopup] = useState({"update": false})
-    const [device, setDevice] = useState(null)
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: [DEVICES_LIST],

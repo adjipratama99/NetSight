@@ -125,3 +125,7 @@ body {
 .mapboxgl-popup-close-button {
   @apply pr-1 !important
 }
+
+.rs-picker-popup {
+  @apply z-[51] pointer-events-auto !important
+}
