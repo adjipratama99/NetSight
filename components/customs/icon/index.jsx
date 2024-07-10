@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
-import { FaUserAstronaut, FaUserSecret } from "react-icons/fa";
-import { LiaUserSecretSolid } from "react-icons/lia";
+import { FaUserAlt, FaUserAstronaut, FaUserNurse, FaUserSecret } from "react-icons/fa";
 
 export default function CopsIcon ({
     data
@@ -8,7 +7,7 @@ export default function CopsIcon ({
     if(data.deviceType === "polsek") {
         return (
             <>
-                <FaUserAstronaut
+                <FaUserAlt
                     className={
                         cn(
                             "absolute animate-ping inline-flex h-full w-full rounded-full",
@@ -16,7 +15,7 @@ export default function CopsIcon ({
                         )
                     }
                 />
-                <FaUserAstronaut 
+                <FaUserAlt 
                     className={
                         cn(
                             "relative inline-flex rounded-full",
@@ -50,7 +49,7 @@ export default function CopsIcon ({
     } else {
         return (
             <>
-                <LiaUserSecretSolid
+                <FaUserNurse
                     className={
                         cn(
                             "absolute animate-ping inline-flex h-full w-full rounded-full",
@@ -58,7 +57,7 @@ export default function CopsIcon ({
                         )
                     }
                 />
-                <LiaUserSecretSolid 
+                <FaUserNurse 
                     className={
                         cn(
                             "relative inline-flex rounded-full",
