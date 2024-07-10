@@ -53,7 +53,7 @@ const MarkerMap = ({ clickFn, val }) => {
                             className={
                                 cn(
                                     "absolute animate-ping inline-flex h-full w-full rounded-full",
-                                    val.status ? "text-green-500" : 'text-yellow-500'
+                                    val.status === 1 ? "text-green-500" : 'text-yellow-500'
                                 )
                             }
                         />
