@@ -80,62 +80,68 @@ export default function Bandwith({ currentData, dates, isReport }) {
                         <div className="text-md mb-4">{ data.deviceName }</div>
                         : null
                     }
-                    <div className="h-[300px]">
-                        <GenerateHighcharts type="line" data={data?.result} options={{
-                            legend: {
-                                layout: 'vertical',
-                                align: 'right',
-                                floating: true,
-                                verticalAlign: 'top'
-                            }
-                        }} />
-                    </div>
-                    <div className="flex gap-4 flex-col ml-[30px]">
-                        <div className="grid grid-cols-5 gap-2">
-                            <div className="flex items-center gap-1">
-                                <FaSquare style={{color: chartColor()[0]}} />
-                                Uplink
+                    {
+                        data && data?.result?.series ?
+                        <>
+                            <div className="h-[300px]">
+                                <GenerateHighcharts type="line" data={data?.result} options={{
+                                    legend: {
+                                        layout: 'vertical',
+                                        align: 'right',
+                                        floating: true,
+                                        verticalAlign: 'top'
+                                    }
+                                }} />
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span>Average: </span>
-                                { average[0] ? (formatBytes(average[0]).val +' '+ formatBytes(average[0]).unit) : 0 +' Byte' }
+                            <div className="flex gap-4 flex-col ml-[30px]">
+                                <div className="grid grid-cols-5 gap-2">
+                                    <div className="flex items-center gap-1">
+                                        <FaSquare style={{color: chartColor()[0]}} />
+                                        Uplink
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Average: </span>
+                                        { average[0] ? (formatBytes(average[0]).val +' '+ formatBytes(average[0]).unit) : 0 +' Byte' }
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Max: </span>
+                                        { max[0] ? (formatBytes(max[0]).val +' '+ formatBytes(max[0]).unit) : 0 +' Byte' }
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Min: </span>
+                                        { min[0] ? (formatBytes(min[0]).val +' '+ formatBytes(min[0]).unit) : 0 +' Byte' }
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Total: </span>
+                                        { total[0] ? (formatBytes(total[0]).val +' '+ formatBytes(total[0]).unit) : 0 +' Byte' }
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-5 gap-2">
+                                    <div className="flex items-center gap-1">
+                                        <FaSquare style={{color: chartColor()[1]}} />
+                                        Downlink
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Average: </span>
+                                        { average[1] ? (formatBytes(average[1]).val +' '+ formatBytes(average[1]).unit) : 0 +' Byte' }
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Max: </span>
+                                        { max[1] ? (formatBytes(max[1]).val +' '+ formatBytes(max[1]).unit) : 0 +' Byte' }
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Min: </span>
+                                        { min[1] ? (formatBytes(min[1]).val +' '+ formatBytes(min[1]).unit) : 0 +' Byte' }
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span>Total: </span>
+                                        { total[1] ? (formatBytes(total[1]).val +' '+ formatBytes(total[1]).unit) : 0 +' Byte' }
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span>Max: </span>
-                                { max[0] ? (formatBytes(max[0]).val +' '+ formatBytes(max[0]).unit) : 0 +' Byte' }
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span>Min: </span>
-                                { min[0] ? (formatBytes(min[0]).val +' '+ formatBytes(min[0]).unit) : 0 +' Byte' }
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span>Total: </span>
-                                { total[0] ? (formatBytes(total[0]).val +' '+ formatBytes(total[0]).unit) : 0 +' Byte' }
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-5 gap-2">
-                            <div className="flex items-center gap-1">
-                                <FaSquare style={{color: chartColor()[1]}} />
-                                Downlink
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span>Average: </span>
-                                { average[1] ? (formatBytes(average[1]).val +' '+ formatBytes(average[1]).unit) : 0 +' Byte' }
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span>Max: </span>
-                                { max[1] ? (formatBytes(max[1]).val +' '+ formatBytes(max[1]).unit) : 0 +' Byte' }
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span>Min: </span>
-                                { min[1] ? (formatBytes(min[1]).val +' '+ formatBytes(min[1]).unit) : 0 +' Byte' }
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <span>Total: </span>
-                                { total[1] ? (formatBytes(total[1]).val +' '+ formatBytes(total[1]).unit) : 0 +' Byte' }
-                            </div>
-                        </div>
-                    </div>
+                        </>
+                        : null
+                    }
                 </>
             }
         </div>
