@@ -76,7 +76,7 @@ export default function ReportPage() {
             cn("flex flex-col gap-4")
         }>
             {
-                process.env.NEXT_PUBLIC_APP_MAINTENANCE ?
+                parseInt(process.env.NEXT_PUBLIC_APP_MAINTENANCE) ?
                 <h1 className="text-red-700 text-2xl text-center">[UNDER MAINTENANCE]</h1>
                 :
                 <>

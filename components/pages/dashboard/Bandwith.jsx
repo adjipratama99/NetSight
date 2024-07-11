@@ -34,11 +34,11 @@ export default function Bandwith({ currentData, dates, isReport }) {
     
             if(data?.result?.series[0]?.data) {
                 data?.result?.series.map((val, ind) => {
-                    let total = val?.data ? val?.data.reduce((partialSum, a) => partialSum + a, 0) : 0
+                    let total = val?.data && val?.data.length ? val?.data.reduce((partialSum, a) => partialSum + a, 0) : 0
                     prevTotal[ind] = total
-                    prevAverage[ind] = val?.data ? total / val?.data.length : 0
-                    prevMax[ind] = val?.data ? Math.max(...val?.data) : 0
-                    prevMin[ind] = val?.data ? Math.min(...val?.data) : 0
+                    prevAverage[ind] = val?.data && val?.data.length ? total / val?.data.length : 0
+                    prevMax[ind] = val?.data && val?.data.length ? Math.max(...val?.data) : 0
+                    prevMin[ind] = val?.data && val?.data.length ? Math.min(...val?.data) : 0
                 })
             }
     
@@ -53,6 +53,8 @@ export default function Bandwith({ currentData, dates, isReport }) {
         getSummary()
     }, [data])
 
+    console.log(max, min)
+    
     return (
         <div className="flex flex-col gap-4 bg-neutral-100 p-4 rounded-lg w-full">
             <div className="flex justify-end">
@@ -69,7 +71,7 @@ export default function Bandwith({ currentData, dates, isReport }) {
             </div>
 
             {
-                process.env.NEXT_PUBLIC_APP_MAINTENANCE ?
+                parseInt(process.env.NEXT_PUBLIC_APP_MAINTENANCE) ?
                     <div className="text-2xl text-center text-red-700">[UNDER MAINTENANCE]</div>
                 :
                 <>
@@ -79,7 +81,7 @@ export default function Bandwith({ currentData, dates, isReport }) {
                         : null
                     }
                     <div className="h-[300px]">
-                        <GenerateHighcharts type="line" data={result} options={{
+                        <GenerateHighcharts type="line" data={data?.result} options={{
                             legend: {
                                 layout: 'vertical',
                                 align: 'right',
@@ -96,19 +98,19 @@ export default function Bandwith({ currentData, dates, isReport }) {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Average: </span>
-                                { formatBytes(average[0]).val +' '+ formatBytes(average[0]).unit }
+                                { average[0] ? (formatBytes(average[0]).val +' '+ formatBytes(average[0]).unit) : 0 +' Byte' }
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Max: </span>
-                                { formatBytes(max[0]).val +' '+ formatBytes(max[0]).unit }
+                                { max[0] ? (formatBytes(max[0]).val +' '+ formatBytes(max[0]).unit) : 0 +' Byte' }
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Min: </span>
-                                { formatBytes(min[0]).val +' '+ formatBytes(min[0]).unit }
+                                { min[0] ? (formatBytes(min[0]).val +' '+ formatBytes(min[0]).unit) : 0 +' Byte' }
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Total: </span>
-                                { formatBytes(total[0]).val +' '+ formatBytes(total[0]).unit }
+                                { total[0] ? (formatBytes(total[0]).val +' '+ formatBytes(total[0]).unit) : 0 +' Byte' }
                             </div>
                         </div>
                         <div className="grid grid-cols-5 gap-2">
@@ -118,19 +120,19 @@ export default function Bandwith({ currentData, dates, isReport }) {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Average: </span>
-                                { formatBytes(average[1]).val +' '+ formatBytes(average[1]).unit }
+                                { average[1] ? (formatBytes(average[1]).val +' '+ formatBytes(average[1]).unit) : 0 +' Byte' }
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Max: </span>
-                                { formatBytes(max[1]).val +' '+ formatBytes(max[1]).unit }
+                                { max[1] ? (formatBytes(max[1]).val +' '+ formatBytes(max[1]).unit) : 0 +' Byte' }
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Min: </span>
-                                { formatBytes(min[1]).val +' '+ formatBytes(min[1]).unit }
+                                { min[1] ? (formatBytes(min[1]).val +' '+ formatBytes(min[1]).unit) : 0 +' Byte' }
                             </div>
                             <div className="flex items-center gap-3">
                                 <span>Total: </span>
-                                { formatBytes(total[1]).val +' '+ formatBytes(total[1]).unit }
+                                { total[1] ? (formatBytes(total[1]).val +' '+ formatBytes(total[1]).unit) : 0 +' Byte' }
                             </div>
                         </div>
                     </div>
