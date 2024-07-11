@@ -9,6 +9,7 @@ export const alertColumns = (delFn) => {
       {
           id: "username-"+ random,
           accessorKey: "username",
+          meta: { className: "w-[60wv] overflow-x-scroll md:overflow-auto md:w-full" },
           header: "Username"
       },
       {

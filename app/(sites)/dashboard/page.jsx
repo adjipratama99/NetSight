@@ -16,7 +16,7 @@ import { Modal } from "@/components/customs/modal";
 import { Button } from "@/components/ui/button";
 import UpdateDevice from "@/components/forms/UpdateDevice";
 import CopsIcon from "@/components/customs/icon";
-import { FaUserAlt, FaUserNurse, FaUserSecret } from "react-icons/fa";
+import Legends from "@/components/customs/maps/legends";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
@@ -111,26 +111,12 @@ export default function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-4">
-            <Card>
+            <Card className="mb-4">
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
-                    <h1 className="text-md">Device Monitoring</h1>
-                    <div className="flex items-center gap-5">
-                        <div className="flex items-center gap-1">
-                            <FaUserAlt className="text-violet-600" />
-                            Polsek
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <FaUserSecret className="text-green-600" />
-                            Polda
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <FaUserNurse className="text-cyan-600" />
-                            Polres
-                        </div>
-                    </div>
+                    <h1 className="text-xs md:max-2xl:text-md">Device Monitoring</h1>
                     <Modal 
                         open={showPopup['update']} 
-                        trigger={<Button size="xs">Update Device</Button>}
+                        trigger={<Button size="xs" className="text-xs md:text-sm">Update Device</Button>}
                         onOpenChange={handleModalChange} 
                         content={<UpdateDevice data={data} closeEvent={handleModalChange} />} 
                         title="Update Device"
@@ -138,7 +124,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent className={
                     cn(
-                        'h-[80vh] px-4'
+                        'h-[81vh] md:h-[80vh] px-4'
                     )
                 }>
                     {
@@ -160,7 +146,7 @@ export default function DashboardPage() {
                                 latitude:  -2.8943844,
                                 zoom: 4
                             }}
-                            style={{ width: "100%", height: "78vh" }}
+                            style={{ width: "100%", height: "75vh" }}
                             className="rounded-lg"
                             control={false}
                             projection="mercator"
@@ -194,6 +180,7 @@ export default function DashboardPage() {
                                 : null
                             }
                         </Map>
+                        <Legends />
                     </div>
                 </CardContent>
             </Card>
