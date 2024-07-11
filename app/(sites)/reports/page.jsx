@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { FaFileAlt, FaServer, FaTimes } from "react-icons/fa";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import Bandwith from "@/components/pages/dashboard/Bandwith";
 import { maxAnalytics } from "@/lib/Constants";
 import { toast } from "react-toastify";
@@ -22,9 +22,6 @@ export default function ReportPage() {
     const { data: session } = useSession()
     const { toPDF, targetRef } = usePDF({ filename: "Report-Monitoring-Device-"+ format(new Date(), 'yyyy-MM-dd') +'.pdf' })
     const [deviceIds, setDeviceIds] = useState([])
-    const [devices, setDevices] = useState([])
-    const [names, setNames] = useState([])
-    const [isFetching, setFetching] = useState(false)
     const [dates, setDate] = useState({ 
         startDate: subtractDate(new Date(), 'days', 7),
         endDate: subtractDate(new Date(), 'days', 1)
@@ -37,39 +34,12 @@ export default function ReportPage() {
         }, true)
     })
 
-    const getBandwith = async () => {
-        setDevices([])
-
-        if(deviceIds && deviceIds.length) {
-            if(deviceIds.length !== maxAnalytics) {
-                setFetching(true)
-                for await(const ind of asyncCounter(deviceIds.length)) {
-                    const deviceId = deviceIds[ind].id
-                    if(!names.includes(deviceIds[ind].deviceName))setNames(prev => [...prev, deviceIds[ind].deviceName])
-                    const req = await fetchPost({
-                        url: '/api/device?dest=getBandwith',
-                        body: { deviceId, ...dates }
-                    }, true)
-
-                    setDevices(prev => [...prev, { id: deviceId, deviceName: deviceIds[ind].deviceName, result: req }])
-                    setFetching(false)
-                }
-            } else {
-                toast.warn('Maximum analytics opened is '+ maxAnalytics +'. Close one of the analytics to see another.')
-            }
-        }
-    }
-
     const addDeviceId = (deviceId) => {
         const res = data?.result.filter(val => val._id === deviceId)
-        const filter = deviceIds.filter(data => data.id === deviceId)
+        const filter = deviceIds.filter(data => data._id === deviceId)
 
-        if(!filter.length) setDeviceIds(prev => [...prev, { id: deviceId, deviceName: res[0].name }])
+        if(!filter.length) setDeviceIds(prev => [...prev, { _id: deviceId, deviceName: res[0].name }])
     }
-
-    useEffect(() => {
-        getBandwith()
-    }, [deviceIds])
 
     return (
         <div className={
@@ -82,18 +52,16 @@ export default function ReportPage() {
                 <>
                     <div className="flex justify-end gap-2 items-center">
                         {
-                            devices && devices.length ?
+                            deviceIds && deviceIds.length ?
                                 <Button variant="secondary" onClick={() => toPDF()} className="flex items-center gap-1"><FaFileAlt />Generate PDF</Button>
                             : null
                         }
                         <DateRangePicker
-                            defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
+                            defaultValue={[parseISO(dates?.startDate), parseISO(dates?.endDate)]}
                             block
                             disabledDate={allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss'))}
                             onOk={(value) => {
-                                setDate({ startDate: formattedDate[0], endDate: formattedDate[1] })
-                                sleep(1000)
-                                getBandwith()
+                                setDate({ startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss') })
                             }}
                             className="w-[250px]"
                         />
@@ -135,24 +103,19 @@ export default function ReportPage() {
                             }
                         </div>
                         {
-                            isFetching && !devices.length ?
-                            <div className="flex items-center gap-1">
-                                <CgSpinner className="animate-spin" />Getting data ...
-                            </div>
-                            :
-                            !isFetching && devices && devices.length ?
+                            deviceIds && deviceIds.length ?
                                 <div ref={targetRef} className="w-full flex flex-col gap-4 p-4">
                                     <div className="flex items-center justify-center flex-col gap-1">
                                         <h1 className="text-xl font-semibold">{ process.env.NEXT_PUBLIC_APP_NAME } Reports</h1>
                                         <div className="text-md">Created at { format(new Date(), 'dd MMM yyyy HH:mm:ss') } by { session?.token?.username }</div>
                                     </div>
                                     {
-                                        devices.map((device, ind) => {
+                                        deviceIds.map((device, ind) => {
                                             const rand = randNumber(10000)
                                             return (
                                                 <Bandwith
-                                                    devices={devices}
-                                                    data={deviceIds[ind]}
+                                                    dates={dates}
+                                                    currentData={device}
                                                     isReport={true}
                                                     key={rand}
                                                 />

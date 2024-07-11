@@ -35,13 +35,13 @@ export default function AlertPage() {
         }, true)
     })
 
-    const deleteAlert = async (username) => {
+    const deleteAlert = async (email) => {
         const req = await fetchPost({
             url: '/api/device?dest=deleteAlertData',
-            body: { username }
+            body: { email }
         }, true)
 
-        if(req.result) {
+        if(req.code) {
             toast.success('Successfully deleting alert account.')
             refetch()
         } else {

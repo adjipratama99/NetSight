@@ -52,23 +52,24 @@ export default function Bandwith({ currentData, dates, isReport }) {
     useEffect(() => {
         getSummary()
     }, [data])
-
-    console.log(max, min)
     
     return (
         <div className="flex flex-col gap-4 bg-neutral-100 p-4 rounded-lg w-full">
-            <div className="flex justify-end">
-                <DateRangePicker
-                    defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
-                    block
-                    disabledDate={allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss'))}
-                    onOk={(value) => {
-                        let params = {...bodyParams, startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss')}
-                        setBodyParams(params)
-                    }}
-                    className="w-[250px]"
-                />
-            </div>
+            {
+                !isReport ?
+                    <div className="flex justify-end">
+                        <DateRangePicker
+                            defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
+                            block
+                            disabledDate={allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss'))}
+                            onOk={(value) => {
+                                let params = {...bodyParams, startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss')}
+                                setBodyParams(params)
+                            }}
+                            className="w-[250px]"
+                        />
+                    </div> : false
+            }
 
             {
                 parseInt(process.env.NEXT_PUBLIC_APP_MAINTENANCE) ?
@@ -77,7 +78,7 @@ export default function Bandwith({ currentData, dates, isReport }) {
                 <>
                     {
                         isReport ?
-                        <div className="text-md mb-4">{ data.deviceName }</div>
+                        <div className="text-md mb-4">{ currentData.deviceName }</div>
                         : null
                     }
                     {

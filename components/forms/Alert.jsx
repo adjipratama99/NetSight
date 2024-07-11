@@ -33,7 +33,7 @@ export default function AlertForm({ closeEvent }) {
             body: params
         }, true),
         onSuccess(data) {
-            if(data.result) {
+            if(data.code) {
                 toast.success('Successfully add new alert');
                 queryClient.invalidateQueries([ALERT_LIST])
                 closeEvent(false)
@@ -45,7 +45,7 @@ export default function AlertForm({ closeEvent }) {
     const form = useForm({
         validatorAdapter,
         defaultValues: {
-            username: ''
+            email: ''
         },
         async onSubmit({ value }) {
             mutate(value)
@@ -61,7 +61,7 @@ export default function AlertForm({ closeEvent }) {
             }}
         >
             <form.Field
-                name="username"
+                name="email"
                 validators={{
                     onChange: yup.string().min(3, 'username must be at least 3 characters'),
                     onChangeAsyncDebounceMs: 500,
@@ -71,10 +71,10 @@ export default function AlertForm({ closeEvent }) {
                 }}
                 children={(field) => (
                     <div className="mb-4">
-                        <Label htmlFor="username">Username</Label>
+                        <Label htmlFor="email">E-mail</Label>
                         <InputUI 
                             type="text" 
-                            placeholder="Enter username ..." 
+                            placeholder="Enter email ..." 
                             required 
                             id={field.name} 
                             name={field.name}
