@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { randNumber } from "@/lib/Helper";
-import { format } from "date-fns";
 import { FaTimes } from "react-icons/fa";
 
 export const alertColumns = (delFn) => {
@@ -9,11 +8,15 @@ export const alertColumns = (delFn) => {
       {
           id: "username-"+ random,
           accessorKey: "username",
+          enableResizing: false,
+          size: 400,
           header: "Username"
       },
       {
         id: "action-"+ random,
         accessorKey: "username",
+        enableResizing: false,
+        size: 100,
         header: "Action",
         cell: props => {
           return <Button 

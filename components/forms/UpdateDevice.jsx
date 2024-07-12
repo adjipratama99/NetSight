@@ -102,18 +102,6 @@ export default function UpdateDevice({ data, closeEvent }) {
                                 data.result.map(device => { return { "value": device._id +'-'+ device.name, "label": device.name } })
                             }
                         />
-                        {/* <Select
-                                id={field.name}
-                                required
-                                fullWidth={true}
-                                name={field.name}
-                                value={field.state.value}
-                                onValueChange={(val) => deviceChange(val, field)}
-                                placeholder="Select device"
-                                options={
-                                    data.result.map(device => { return { "value": device._id, "text": device.name } })
-                                }
-                                /> */}
                          <FieldInfo field={field} />
                     </div>
                 )}

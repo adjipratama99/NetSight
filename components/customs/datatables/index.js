@@ -153,6 +153,8 @@ export function DataTableBasic ({
   columns,
   data,
   isLoading,
+  scrollBody,
+  scrollHeight,
   error,
   rowEachPage
 }) {
@@ -182,15 +184,21 @@ export function DataTableBasic ({
   const elementLoading = showLoading(columns)
 
   return (
-    <div className={className}>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+    <div className={((className) ? className : '')}>
+      <div className="rounded-md border overflow-auto relative" style={scrollBody && { height: scrollHeight }}>
+        <Table className={ scrollBody && "grid" }>
+          <TableHeader className={ scrollBody && "grid sticky top-0 z-[1]" }>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow 
+              className={ scrollBody && "flex w-full" }
+              key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead 
+                      className={scrollBody && "flex"}
+                      key={header.id}
+                      style={scrollBody && {width: header.getSize()}}
+                    >
                       {header.isPlaceholder
                         ? null
                         : <div
@@ -226,29 +234,35 @@ export function DataTableBasic ({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {isLoading 
-            ? elementLoading 
-            : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+          <TableBody className={scrollBody ? 'grid relative overflow-y-auto' : false} style={ scrollBody && { height: scrollHeight } }>
+              {isLoading 
+              ? elementLoading 
+              : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => {
+                  return (
+                    <TableRow
+                      className={ scrollBody && "flex w-full" }
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell 
+                        className={ scrollBody && "flex" }
+                        style={ scrollBody && { width: cell.column.getSize() } }
+                        key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  )
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results.
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
+              )}
           </TableBody>
         </Table>
       </div>

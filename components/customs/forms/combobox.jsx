@@ -53,7 +53,10 @@ export default function ComboBox({
                         return 0;
                     }}
                 >
-                    <CommandInput placeholder="Search ..." />
+                    <CommandInput 
+                        placeholder="Search ..."
+                        className="placeholder:text-slate-700"
+                    />
                     <CommandEmpty>No option found.</CommandEmpty>
                     <CommandGroup>
                         <CommandList>
@@ -62,7 +65,7 @@ export default function ComboBox({
                             key={data.value}
                             value={data.value}
                             onSelect={onSelect}
-                            className="cursor-pointer"
+                            className="cursor-pointer text-slate-900"
                         >
                             <CgCheck
                             className={cn(

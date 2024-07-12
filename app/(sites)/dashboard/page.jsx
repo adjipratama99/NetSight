@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import UpdateDevice from "@/components/forms/UpdateDevice";
 import CopsIcon from "@/components/customs/icon";
 import Legends from "@/components/customs/maps/legends";
+import { format } from "date-fns";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
@@ -56,8 +57,8 @@ export default function DashboardPage() {
     const sidebar = useSidebar()
     const { MapDevice } = useMap()
     const [dates, setDate] = useState({ 
-        startDate: subtractDate(new Date(), 'days', 7),
-        endDate: subtractDate(new Date(), 'days', 1)
+        startDate: format(subtractDate(new Date(), 'days', 7), 'yyyy-MM-dd 00:00:00'),
+        endDate: format(new Date(), 'yyyy-MM-dd 23:59:59')
     })
     const [showPopup, setShowPopup] = useState({"update": false})
 
@@ -113,7 +114,7 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-4">
             <Card className="mb-4">
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
-                    <h1 className="text-xs md:max-2xl:text-md">Device Monitoring</h1>
+                    <div className="text-xs md:text-md">Device Monitoring</div>
                     <Modal 
                         open={showPopup['update']} 
                         trigger={<Button size="xs" className="text-xs md:text-sm">Update Device</Button>}

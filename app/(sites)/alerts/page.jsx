@@ -3,6 +3,7 @@
 import { DataTableBasic } from "@/components/customs/datatables"
 import { Modal } from "@/components/customs/modal"
 import AlertForm from "@/components/forms/Alert"
+import PageAlertEvent from "@/components/pages/alerts/AlertTable"
 import { alertColumns } from "@/components/pages/alerts/Column"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -50,41 +51,44 @@ export default function AlertPage() {
     }
 
     return (
-        <div className="flex justify-center">
-            <Card className="w-[50rem]">
-                <CardHeader className="py-2 px-4 flex flex-row items-center justify-between mb-4">
-                    <h1 className="text-md">Alerts</h1>
-                    <Modal 
-                        open={open} 
-                        trigger={<Button variant="success" size="xs" className="flex items-center gap-1"><FaUserPlus/>Add Alert</Button>}
-                        onOpenChange={setOpen} 
-                        content={<AlertForm closeEvent={setOpen} />} 
-                        title={"New Target"}
-                        subTitle="Fill out the form below to add new target"
-                    />
-                </CardHeader>
-                <CardContent className={
-                    cn(
-                        'h-[400px] px-4'
-                    )
-                }>
-                    {
-                        isLoading && typeof data === "undefined" ?
-                        <div className="flex items-center gap-2">
-                            <CgSpinner className="animate-spin" /> Getting data...
-                        </div> :
-                        !isLoading && data?.result.length ?
-                            <DataTableBasic
-                                columns={alertColumns(deleteAlert)}
-                                data={data}
-                                isLoading={isLoading}
-                                error={error}
-                                rowEachPage={rowEachPage}
-                            />
-                        : null
-                    }
-                </CardContent>
-            </Card>
-        </div>
+        <>
+            <div className="mb-4">
+                <Card className="md:w-[1000px] overflow-scroll">
+                    <CardHeader className="py-2 px-4 flex flex-row items-center justify-between mb-4">
+                        <h1 className="text-md">Alerts</h1>
+                        <Modal 
+                            open={open} 
+                            trigger={<Button variant="success" size="xs" className="flex items-center gap-1"><FaUserPlus/>Add Alert</Button>}
+                            onOpenChange={setOpen} 
+                            content={<AlertForm closeEvent={setOpen} />} 
+                            title={"New Target"}
+                            subTitle="Fill out the form below to add new target"
+                        />
+                    </CardHeader>
+                    <CardContent className={
+                        cn(
+                            'px-4'
+                        )
+                    }>
+                        {
+                            isLoading && typeof data === "undefined" ?
+                            <div className="flex items-center gap-2">
+                                <CgSpinner className="animate-spin" /> Getting data...
+                            </div> :
+                            !isLoading && data?.result.length ?
+                                <DataTableBasic
+                                    columns={alertColumns(deleteAlert)}
+                                    data={data}
+                                    isLoading={isLoading}
+                                    error={error}
+                                    rowEachPage={rowEachPage}
+                                />
+                            : null
+                        }
+                    </CardContent>
+                </Card>
+            </div>
+            <PageAlertEvent />
+        </>
     )
 }
