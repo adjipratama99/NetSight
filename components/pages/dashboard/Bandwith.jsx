@@ -1,7 +1,7 @@
 import GenerateHighcharts from "@/components/GenerateHighcharts";
 import { FaSquare, FaTimes } from "react-icons/fa";
 import { chartColor } from "@/lib/Constants";
-import { formatBytes, percentageOf, subtractDate } from "@/lib/Helper";
+import { formatBytes, percentageOf, subtractDate, viewAnalytic } from "@/lib/Helper";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPost } from "@/lib/fetchPost";
@@ -63,10 +63,10 @@ export default function Bandwith({ currentData, dates, isReport, deviceIds, setD
     }
     
     return (
-        deviceIds.find(data => data._id === currentData._id) && (
+        viewAnalytic(isReport, deviceIds, currentData) ?
             <div className="flex flex-col gap-4 bg-neutral-100 p-4 rounded-lg w-full" id={currentData?._id}>
                 {
-                    !isReport ?
+                    !isReport && data && data?.result?.series ?
                         <div className="flex justify-end">
                             <DateRangePicker
                                 defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
@@ -178,11 +178,12 @@ export default function Bandwith({ currentData, dates, isReport, deviceIds, setD
                                     </div>
                                 </div>
                             </>
-                            : null
+                            : <div className="text-xl text-center italic text-slate-400">- Data not available -</div>
                         }
                     </>
                 }
             </div>
-        )
+        : 
+        <div className="flex flex-col gap-4 bg-neutral-100 p-4 rounded-lg w-full" id={currentData?._id}><div className="text-xl text-center italic text-slate-400">- Data not available -</div></div>
     )
 }
