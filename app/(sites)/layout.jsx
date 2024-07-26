@@ -14,7 +14,6 @@ export default function SiteLayout({ children }) {
             <SidebarProvider>
                 <div className={theme.theme}>
                     <Header />
-                    <Toolbar className="md:hidden" />
                     <div className="relative">
                         <main className="px-4">
                             { children }
