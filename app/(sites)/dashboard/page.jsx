@@ -18,6 +18,7 @@ import UpdateDevice from "@/components/forms/UpdateDevice";
 import CopsIcon from "@/components/customs/icon";
 import Legends from "@/components/customs/maps/legends";
 import { format } from "date-fns";
+import SummaryPage from "@/components/pages/dashboard/Summary";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
@@ -112,6 +113,7 @@ export default function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-4">
+            <SummaryPage />
             <Card className="mb-4">
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
                     <div className="text-xs md:text-md">Device Monitoring</div>

@@ -7,6 +7,7 @@ export const THEME_LIGHT = "themeLight"
 //Action key
 
 export const DEVICES_LIST = "devices_list"
+export const SUMMARY_DEVICES = "summary_devices"
 export const BANDWITH_LIST = "bandwith_list"
 
 export const ALERT_LIST= "alert_list"
