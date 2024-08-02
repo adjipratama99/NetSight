@@ -20,7 +20,7 @@ export default function BandwithReport({ params }) {
     const { data, isLoading } = useQuery({
         queryKey: [BANDWITH_LIST, params],
         queryFn: () => fetchPost({
-            url: '/api/device?dest=getBandwith',
+            url: '/api/device?dest=getSummaryBandwith',
             body: params
         }, true)
     })

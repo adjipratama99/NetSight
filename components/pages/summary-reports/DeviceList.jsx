@@ -13,7 +13,7 @@ export default function DeviceList({ changeEvent }) {
     const { data, isLoading } = useQuery({
         queryKey: [DEVICES_LIST],
         queryFn: () => fetchPost({
-            url: '/api/device?dest=getDevices',
+            url: '/api/device?dest=getDeviceList',
             body: {}
         }, true)
     })
