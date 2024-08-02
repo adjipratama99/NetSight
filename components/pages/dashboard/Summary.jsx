@@ -1,12 +1,16 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SUMMARY_DEVICES } from "@/contexts/actions";
 import { fetchPost } from "@/lib/fetchPost";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { Numeral } from "react-numeral";
 
 export default function SummaryPage() {
+    const [results, setResults] = useState([])
     const { data, isLoading } = useQuery({
         queryKey: [SUMMARY_DEVICES],
         queryFn: () => fetchPost({
@@ -14,6 +18,15 @@ export default function SummaryPage() {
             body: {}
         }, true)
     })
+
+    if(data) {
+        let resultData = [...data.result]
+        if(!results.length) {
+            let total = resultData.reduce((a, b) => a.total + b.total)
+            resultData = [{ _id: "3", total }, ...resultData]
+            setResults(resultData)
+        }
+    }
 
     return (
         <div>
@@ -24,15 +37,31 @@ export default function SummaryPage() {
                 </div>
                 : null
             }
-            <div className={cn('relative z-10 grid gap-4 grid-cols-2 md:grid-cols-6')}>
+            <div className={cn('relative z-10 grid gap-2 grid-cols-3 sm:grid-cols-6 sm:gap-4')}>
                 {
-                    !isLoading && data && data?.result.length && data?.result.map(summary => {
+                    !isLoading && results.length && results.map(summary => {
+                        let dataSummary = {}
+
+                        switch(summary?._id) {
+                            case "1":
+                                dataSummary = { color: "bg-green-500", "title": "ACTIVE" }
+                                break
+                            case "2":
+                                dataSummary = { color: "bg-red-600", "title": "INACTIVE" }
+                                break
+                            case "3":
+                                dataSummary = { color: "bg-blue-600", "title": "TOTAL" }
+                                break
+                        }
+
                         return (
                             <Card className={cn(
-                                ((summary?._id == "1") ? "bg-green-500" : "bg-red-600")
-                            )}>
+                                dataSummary.color
+                            )}
+                            key={summary?._id}
+                            >
                                 <CardHeader className={cn('border-b-[1px] px-4 pt-4 pb-2 mb-4 font-semibold')}>
-                                    <CardTitle className={cn('text-center')}>{ summary?._id == "1" ? "ACTIVE" : "INACTIVE" }</CardTitle>
+                                    <CardTitle className={cn('text-center')}>{ dataSummary.title }</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="flex justify-center align-items-center text-xl md:text-3xl">

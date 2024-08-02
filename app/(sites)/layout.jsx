@@ -1,6 +1,5 @@
 "use client"
 
-import Toolbar from "@/components/customs/toolbar";
 import Header from "@/components/layout/Header";
 import { SidebarProvider } from "@/contexts/useSidebar";
 import { ThemeProvider, useTheme } from "@/contexts/useThemePicker";
