@@ -118,7 +118,7 @@ export default function DashboardPage() {
                 <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
                     <div className="text-xs md:text-md">Device Monitoring</div>
                     {
-                        !process.env.NEXT_PUBLIC_HIDE_UPDATE_DEVICE && <Modal 
+                        !parseInt(process.env.NEXT_PUBLIC_HIDE_UPDATE_DEVICE) && <Modal 
                         open={showPopup['update']} 
                         trigger={<Button size="xs" className="text-xs md:text-sm">Update Device</Button>}
                         onOpenChange={handleModalChange} 
