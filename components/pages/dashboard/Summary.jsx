@@ -49,7 +49,7 @@ export default function SummaryPage() {
                             case "2":
                                 dataSummary = { color: "bg-red-600", "title": "INACTIVE" }
                                 break
-                            case "3":
+                            case "0":
                                 dataSummary = { color: "bg-blue-600", "title": "TOTAL" }
                                 break
                         }
