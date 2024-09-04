@@ -19,14 +19,14 @@ export default function SummaryPage() {
         }, true)
     })
 
-    // if(data) {
-    //     let resultData = [...data.result]
-    //     if(!results.length) {
-    //         let total = resultData.reduce((a, b) => a.total + b.total)
-    //         resultData = [{ _id: "3", total }, ...resultData]
-    //         setResults(resultData)
-    //     }
-    // }
+    if(data) {
+        let resultData = [...data.result]
+        if(!results.length) {
+            // let total = resultData.reduce((a, b) => a.total + b.total)
+            // resultData = [{ _id: "3", total }, ...resultData]
+            setResults(resultData)
+        }
+    }
 
     return (
         <div>
