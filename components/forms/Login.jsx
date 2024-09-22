@@ -147,10 +147,10 @@ export default function LoginForm() {
             <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                    <GoogleReCaptcha
-                        onVerify={onRecaptchaVerify}
-                        refreshReCaptcha={refreshReCaptcha}
-                    >
+                    // <GoogleReCaptcha
+                    //     onVerify={onRecaptchaVerify}
+                    //     refreshReCaptcha={refreshReCaptcha}
+                    // >
                         <Button type="submit" disabled={!canSubmit || isSuccess} className="w-full">
                             {isSubmitting
                                 ?  (<> <CgSpinner className="mr-2 animate-spin" /> Loading... </>)
@@ -160,7 +160,7 @@ export default function LoginForm() {
                                     "Sign-In"
                             }
                         </Button>
-                    </GoogleReCaptcha>
+                    // </GoogleReCaptcha>
                 )}
             />
         </form>
