@@ -20,9 +20,9 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen antialiased")}>
-        <GoogleReCaptchaProvider
+        {/* <GoogleReCaptchaProvider
           reCaptchaKey={process.env.NEXT_PUBLIC_SecretKey}
-        >
+        > */}
           <SessionProvider session={session}>
             <ReactQueryClientProvider>
                 {children}
@@ -37,7 +37,7 @@ export default async function RootLayout({ children }) {
             pauseOnHover
             theme="dark"
           />
-        </GoogleReCaptchaProvider>
+        {/* </GoogleReCaptchaProvider> */}
       </body>
     </html>
   );
