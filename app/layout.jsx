@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import 'react-toastify/dist/ReactToastify.css';
 import 'rsuite/DateRangePicker/styles/index.css';
 import { ToastContainer } from "react-toastify";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 export const metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME,
@@ -20,9 +19,6 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen antialiased")}>
-        {/* <GoogleReCaptchaProvider
-          reCaptchaKey={process.env.NEXT_PUBLIC_SecretKey}
-        > */}
           <SessionProvider session={session}>
             <ReactQueryClientProvider>
                 {children}
@@ -37,7 +33,6 @@ export default async function RootLayout({ children }) {
             pauseOnHover
             theme="dark"
           />
-        {/* </GoogleReCaptchaProvider> */}
       </body>
     </html>
   );

@@ -13,7 +13,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { signIn } from 'next-auth/react'
 import { CgSpinner } from 'react-icons/cg';
 import { toast } from 'react-toastify'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 function FieldInfo({ field }) {
     return (
@@ -147,10 +146,6 @@ export default function LoginForm() {
             <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                    // <GoogleReCaptcha
-                    //     onVerify={onRecaptchaVerify}
-                    //     refreshReCaptcha={refreshReCaptcha}
-                    // >
                         <Button type="submit" disabled={!canSubmit || isSuccess} className="w-full">
                             {isSubmitting
                                 ?  (<> <CgSpinner className="mr-2 animate-spin" /> Loading... </>)
@@ -160,7 +155,6 @@ export default function LoginForm() {
                                     "Sign-In"
                             }
                         </Button>
-                    // </GoogleReCaptcha>
                 )}
             />
         </form>
