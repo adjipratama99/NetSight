@@ -2,7 +2,7 @@
 
 import * as yup from 'yup'
 import { useRouter, useSearchParams } from "next/navigation"
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useForm } from '@tanstack/react-form'
 import { yupValidator as validatorAdapter } from "@tanstack/yup-form-adapter"
 import { FaExclamation } from 'react-icons/fa';
@@ -13,6 +13,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { signIn } from 'next-auth/react'
 import { CgSpinner } from 'react-icons/cg';
 import { toast } from 'react-toastify'
+import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 function FieldInfo({ field }) {
     return (
@@ -28,12 +29,16 @@ function FieldInfo({ field }) {
 }
 
 export default function LoginForm() {
+    const [token, setToken] = useState(null)
+    const [refreshReCaptcha, setRefreshReCaptcha] = useState(false);
     const [enablePassword, setEnablePassword] = useState(false),
     [isSuccess, setSuccess] = useState(false)
 
     const router = useRouter()
     const searchParams = useSearchParams()
     const redirect = useMemo(() => searchParams.get('callbackUrl'), [])
+
+    const onRecaptchaVerify = useCallback(token => setToken(token))
     
     const form = useForm({
         validatorAdapter,
@@ -63,6 +68,8 @@ export default function LoginForm() {
 
                 router.push(redirect ? redirect : '/dashboard')
             }
+
+            setRefreshReCaptcha(r => !r)
         }
     })
 
@@ -140,15 +147,20 @@ export default function LoginForm() {
             <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                    <Button type="submit" disabled={!canSubmit || isSuccess} className="w-full">
-                        {isSubmitting
-                            ?  (<> <CgSpinner className="mr-2 animate-spin" /> Loading... </>)
-                            : isSuccess ?
-                                <div className='flex gap-1 items-center'><CgSpinner className="mr-2 animate-spin" />Redirecting...</div>
-                            :
-                                "Sign-In"
-                        }
-                    </Button>
+                    <GoogleReCaptcha
+                        onVerify={onRecaptchaVerify}
+                        refreshReCaptcha={refreshReCaptcha}
+                    >
+                        <Button type="submit" disabled={!canSubmit || isSuccess} className="w-full">
+                            {isSubmitting
+                                ?  (<> <CgSpinner className="mr-2 animate-spin" /> Loading... </>)
+                                : isSuccess ?
+                                    <div className='flex gap-1 items-center'><CgSpinner className="mr-2 animate-spin" />Redirecting...</div>
+                                :
+                                    "Sign-In"
+                            }
+                        </Button>
+                    </GoogleReCaptcha>
                 )}
             />
         </form>
