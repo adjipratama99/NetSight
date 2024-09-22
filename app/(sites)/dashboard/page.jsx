@@ -19,6 +19,9 @@ import CopsIcon from "@/components/customs/icon";
 import Legends from "@/components/customs/maps/legends";
 import { format } from "date-fns";
 import SummaryPage from "@/components/pages/dashboard/Summary";
+import Image from "next/image";
+import { FaHome } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 let intervalRefetch = null
 
 const MarkerMap = ({ clickFn, val }) => {
@@ -55,6 +58,7 @@ const MarkerMap = ({ clickFn, val }) => {
 }
 
 export default function DashboardPage() {
+    const { data: session } = useSession()
     const sidebar = useSidebar()
     const { MapDevice } = useMap()
     const [dates, setDate] = useState({ 
@@ -113,82 +117,102 @@ export default function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-4">
-            <SummaryPage />
-            <Card className="mb-4">
-                <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
-                    <div className="text-xs md:text-md">Device Monitoring</div>
-                    {
-                        !parseInt(process.env.NEXT_PUBLIC_HIDE_UPDATE_DEVICE) && <Modal 
-                        open={showPopup['update']} 
-                        trigger={<Button size="xs" className="text-xs md:text-sm">Update Device</Button>}
-                        onOpenChange={handleModalChange} 
-                        content={<UpdateDevice data={data} closeEvent={handleModalChange} />} 
-                        title="Update Device"
-                    />
-                    }
-                </CardHeader>
-                <CardContent className={
-                    cn(
-                        'h-[81vh] md:h-[80vh] px-4'
-                    )
-                }>
-                    {
-                        isLoading && typeof data === "undefined" ?
-                        <div className="flex items-center gap-1">
-                            <CgSpinner className="animate-spin" /> Getting devices ...
-                        </div>
-                        :
-                        null
-                    }
-                    <div className={
-                        cn('relative z-10')
-                    }>
-                        <Map
-                            id="dashboardMap"
-                            mapStyle="mapbox://styles/mapbox/light-v11"
-                            initialViewState={{
-                                longitude: 117.5371166,
-                                latitude:  -2.8943844,
-                                zoom: 4
-                            }}
-                            style={{ width: "100%", height: "75vh" }}
-                            className="rounded-lg"
-                            control={false}
-                            projection="mercator"
-                        >
-                            {
-                                data?.result.length ?
-                                    data.result.map(val => {
-                                        if("latitude" in val && "longitude" in val) {
-                                            return (
-                                                <div 
-                                                    key={val._id}
-                                                    >
-                                                        <Modal 
-                                                            open={showPopup[val._id]} 
-                                                            trigger={<MarkerMap val={val} clickFn={deviceClick} />}
-                                                            onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
-                                                            content={
-                                                                <Bandwith
-                                                                    dates={dates}
-                                                                    currentData={val}
-                                                                />
-                                                            } 
-                                                            title="Device Monitoring"
-                                                            subTitle={"Detail's about "+ val.name +"'s device monitoring."}
-                                                            className="w-[70rem] max-w-[70rem]"
-                                                        />
-                                                    </div>
-                                            )
-                                        } 
-                                    })
-                                : null
-                            }
-                        </Map>
-                        <Legends />
+            {
+                !session?.token?.access.includes("dashboard") ?
+                    <div className="flex flex-col gap-4 items-center justify-center h-[80vh]">
+                        <Image
+                            src={require("@/public/forbidden.png")}
+                            alt="403 Forbidden"
+                            className="self-center"
+                            width={256}
+                        />
+                        <h1 className="text-2xl">You do not have permission to access this page.</h1>
+                        <Button
+                            size="icon"
+                            className="group size-8 w-auto transition-all hover:justify-start gap-2 px-2 rounded-lg"
+                            onClick={() => location.replace('/')}
+                        ><FaHome /> Go back to Home</Button>
                     </div>
-                </CardContent>
-            </Card>
+                :
+                <>
+                    <SummaryPage />
+                    <Card className="mb-4">
+                        <CardHeader className="py-2 px-4 flex flex-row items-center justify-between">
+                            <div className="text-xs md:text-md">Device Monitoring</div>
+                            {
+                                !parseInt(process.env.NEXT_PUBLIC_HIDE_UPDATE_DEVICE) && <Modal 
+                                open={showPopup['update']} 
+                                trigger={<Button size="xs" className="text-xs md:text-sm">Update Device</Button>}
+                                onOpenChange={handleModalChange} 
+                                content={<UpdateDevice data={data} closeEvent={handleModalChange} />} 
+                                title="Update Device"
+                            />
+                            }
+                        </CardHeader>
+                        <CardContent className={
+                            cn(
+                                'h-[81vh] md:h-[80vh] px-4'
+                            )
+                        }>
+                            {
+                                isLoading && typeof data === "undefined" ?
+                                <div className="flex items-center gap-1">
+                                    <CgSpinner className="animate-spin" /> Getting devices ...
+                                </div>
+                                :
+                                null
+                            }
+                            <div className={
+                                cn('relative z-10')
+                            }>
+                                <Map
+                                    id="dashboardMap"
+                                    mapStyle="mapbox://styles/mapbox/light-v11"
+                                    initialViewState={{
+                                        longitude: 117.5371166,
+                                        latitude:  -2.8943844,
+                                        zoom: 4
+                                    }}
+                                    style={{ width: "100%", height: "75vh" }}
+                                    className="rounded-lg"
+                                    control={false}
+                                    projection="mercator"
+                                >
+                                    {
+                                        data?.result.length ?
+                                            data.result.map(val => {
+                                                if("latitude" in val && "longitude" in val) {
+                                                    return (
+                                                        <div 
+                                                            key={val._id}
+                                                            >
+                                                                <Modal 
+                                                                    open={showPopup[val._id]} 
+                                                                    trigger={<MarkerMap val={val} clickFn={deviceClick} />}
+                                                                    onOpenChange={() => setShowPopup(prev => prev[val._id] = false)} 
+                                                                    content={
+                                                                        <Bandwith
+                                                                            dates={dates}
+                                                                            currentData={val}
+                                                                        />
+                                                                    } 
+                                                                    title="Device Monitoring"
+                                                                    subTitle={"Detail's about "+ val.name +"'s device monitoring."}
+                                                                    className="w-[70rem] max-w-[70rem]"
+                                                                />
+                                                            </div>
+                                                    )
+                                                } 
+                                            })
+                                        : null
+                                    }
+                                </Map>
+                                <Legends />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </>
+            }
         </div>
     )
 }

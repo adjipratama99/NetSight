@@ -1,21 +1,22 @@
-export default function getMenu(options) {
-    const { isAdmin, isOperator, isUser } = options
-    const mainmenu = [
+import { FaExclamationCircle, FaFileAlt, FaHome } from "react-icons/fa";
+
+export default function MenuList() {
+    return [
         {
             label: 'Dashboard',
             accessKey: 'dashboard',
-            link: '/dashboard'
-        }
-    ]
-
-    return [
-        {
-            type: 'group',
-            name: 'Main Menu',
-            accessList: [
-                'dashboard'
-            ],
-            children: mainmenu
+            link: '/dashboard',
+            icon: <FaHome />
+        }, {
+            label: 'Alert',
+            accessKey: 'alerts',
+            link: '/alerts',
+            icon: <FaExclamationCircle />
+        }, {
+            label: 'Report',
+            accessKey: 'reports',
+            link: '/reports',
+            icon: <FaFileAlt />
         }
     ]
 }

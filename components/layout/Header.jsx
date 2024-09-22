@@ -9,6 +9,7 @@ import { FaExclamationCircle, FaFileAlt, FaHome } from 'react-icons/fa'
 import { usePathname } from 'next/navigation'
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from 'react'
+import MenuList from '@/config/menu'
 
 export default function Header({ width, className, ...props }) {
     const { data: session } = useSession()
@@ -48,45 +49,30 @@ export default function Header({ width, className, ...props }) {
                      )}
                      id="navbar-default">
                         <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white">
-                            <li>
-                                <Link
-                                    href="/"
-                                    className={
-                                        cn(
-                                            "rounded-lg flex items-center gap-2",
-                                            pathname === "/dashboard" ? "text-green-600" : "hover:text-green-500"
+                            {
+                                MenuList().map(menu => {
+                                    const randNumber = Math.floor(Math.random() * 1000)
+                                    
+                                    if(session?.token?.access.includes(menu?.accessKey)) {
+                                        return (
+                                            <li key={randNumber}>
+                                                <Link
+                                                    href={menu?.link}
+                                                    className={
+                                                        cn(
+                                                            "rounded-lg flex items-center gap-2",
+                                                            pathname === menu?.link ? "text-green-600" : "hover:text-green-500"
+                                                        )
+                                                    }
+                                                >
+                                                    { menu?.icon }
+                                                    { menu?.label }
+                                                </Link>
+                                            </li>
                                         )
                                     }
-                                >
-                                    <FaHome /> Dashboard
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/alerts"
-                                    className={
-                                        cn(
-                                            "rounded-lg flex items-center gap-2",
-                                            pathname === "/alerts" ? "text-green-500" : "hover:text-green-500"
-                                        )
-                                    }
-                                >
-                                    <FaExclamationCircle /> Alert
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/reports"
-                                    className={
-                                        cn(
-                                            "rounded-lg flex items-center gap-2",
-                                            pathname === "/reports" ? "text-green-500" : "hover:text-green-500"
-                                        )
-                                    }
-                                >
-                                    <FaFileAlt /> Report
-                                </Link>
-                            </li>
+                                })
+                            }
                         </ul>
                     </div>
                 </div>

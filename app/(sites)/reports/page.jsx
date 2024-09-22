@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CgSpinner } from "react-icons/cg";
-import { FaFileAlt, FaServer, FaTimes } from "react-icons/fa";
+import { FaFileAlt, FaHome, FaTimes } from "react-icons/fa";
 import { format, parseISO } from "date-fns";
 import Bandwith from "@/components/pages/dashboard/Bandwith";
 import { maxAnalytics } from "@/lib/Constants";
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { DateRangePicker } from "rsuite";
 import ComboBox from "@/components/customs/forms/combobox";
+import Image from "next/image";
 const { allowedRange } = DateRangePicker
 
 export default function ReportPage() {
@@ -55,8 +56,21 @@ export default function ReportPage() {
             cn("flex flex-col gap-4")
         }>
             {
-                parseInt(process.env.NEXT_PUBLIC_APP_MAINTENANCE) ?
-                <h1 className="text-red-700 text-2xl text-center">[UNDER MAINTENANCE]</h1>
+                !session?.token?.access.includes("reports") ?
+                    <div className="flex flex-col gap-4 items-center justify-center h-[80vh]">
+                        <Image
+                            src={require("@/public/forbidden.png")}
+                            alt="403 Forbidden"
+                            className="self-center"
+                            width={256}
+                        />
+                        <h1 className="text-2xl">You do not have permission to access this page.</h1>
+                        <Button
+                            size="icon"
+                            className="group size-8 w-auto transition-all hover:justify-start gap-2 px-2 rounded-lg"
+                            onClick={() => location.replace('/')}
+                        ><FaHome /> Go back to Home</Button>
+                    </div>
                 :
                 <div>
                     <div className="flex justify-end gap-2 items-center">

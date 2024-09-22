@@ -13,12 +13,15 @@ import useSorting from "@/hooks/useSorting"
 import { fetchPost } from "@/lib/fetchPost"
 import { cn } from "@/lib/utils"
 import { useQuery } from "@tanstack/react-query"
+import { useSession } from "next-auth/react"
+import Image from "next/image"
 import { useState } from "react"
 import { CgSpinner } from "react-icons/cg"
-import { FaUserPlus } from "react-icons/fa"
+import { FaHome, FaUserPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
 
 export default function AlertPage() {
+    const { data: session } = useSession()
     const [open, setOpen] = useState(false)
     const rowEachPage = 10
     const { offset, limit, onPaginationChange, pagination } = usePagination(rowEachPage)
@@ -52,43 +55,63 @@ export default function AlertPage() {
 
     return (
         <>
-            <div className="mb-4">
-                <Card className="md:w-[1000px] overflow-scroll">
-                    <CardHeader className="py-2 px-4 flex flex-row items-center justify-between mb-4">
-                        <h1 className="text-md">Alerts</h1>
-                        <Modal 
-                            open={open} 
-                            trigger={<Button variant="success" size="xs" className="flex items-center gap-1"><FaUserPlus/>Add Alert</Button>}
-                            onOpenChange={setOpen} 
-                            content={<AlertForm closeEvent={setOpen} />} 
-                            title={"New Target"}
-                            subTitle="Fill out the form below to add new target"
+            {
+                !session?.token?.access.includes("alerts") ?
+                    <div className="flex flex-col gap-4 items-center justify-center h-[80vh]">
+                        <Image
+                            src={require("@/public/forbidden.png")}
+                            alt="403 Forbidden"
+                            className="self-center"
+                            width={256}
                         />
-                    </CardHeader>
-                    <CardContent className={
-                        cn(
-                            'px-4'
-                        )
-                    }>
-                        {
-                            isLoading && typeof data === "undefined" ?
-                            <div className="flex items-center gap-2">
-                                <CgSpinner className="animate-spin" /> Getting data...
-                            </div> :
-                            !isLoading && data?.result.length ?
-                                <DataTableBasic
-                                    columns={alertColumns(deleteAlert)}
-                                    data={data}
-                                    isLoading={isLoading}
-                                    error={error}
-                                    rowEachPage={rowEachPage}
+                        <h1 className="text-2xl">You do not have permission to access this page.</h1>
+                        <Button
+                            size="icon"
+                            className="group size-8 w-auto transition-all hover:justify-start gap-2 px-2 rounded-lg"
+                            onClick={() => location.replace('/')}
+                        ><FaHome /> Go back to Home</Button>
+                    </div>
+                :
+                <>
+                    <div className="mb-4">
+                        <Card className="md:w-[1000px] overflow-scroll">
+                            <CardHeader className="py-2 px-4 flex flex-row items-center justify-between mb-4">
+                                <h1 className="text-md">Alerts</h1>
+                                <Modal 
+                                    open={open} 
+                                    trigger={<Button variant="success" size="xs" className="flex items-center gap-1"><FaUserPlus/>Add Alert</Button>}
+                                    onOpenChange={setOpen} 
+                                    content={<AlertForm closeEvent={setOpen} />} 
+                                    title={"New Target"}
+                                    subTitle="Fill out the form below to add new target"
                                 />
-                            : null
-                        }
-                    </CardContent>
-                </Card>
-            </div>
-            <PageAlertEvent />
+                            </CardHeader>
+                            <CardContent className={
+                                cn(
+                                    'px-4'
+                                )
+                            }>
+                                {
+                                    isLoading && typeof data === "undefined" ?
+                                    <div className="flex items-center gap-2">
+                                        <CgSpinner className="animate-spin" /> Getting data...
+                                    </div> :
+                                    !isLoading && data?.result.length ?
+                                        <DataTableBasic
+                                            columns={alertColumns(deleteAlert)}
+                                            data={data}
+                                            isLoading={isLoading}
+                                            error={error}
+                                            rowEachPage={rowEachPage}
+                                        />
+                                    : null
+                                }
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <PageAlertEvent />
+                </>
+            }
         </>
     )
 }
