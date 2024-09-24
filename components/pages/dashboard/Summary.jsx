@@ -22,8 +22,16 @@ export default function SummaryPage() {
     if(data) {
         let resultData = [...data.result]
         if(!results.length) {
-            // let total = resultData.reduce((a, b) => a.total + b.total)
-            // resultData = [{ _id: "3", total }, ...resultData]
+            let active = []
+            let inactive = []
+            resultData.map(data => {
+                (["0", "1"].includes(data?._id)) ? active.push(data) : inactive.push(data)
+            })
+            inactive = inactive[0]?.total
+            let total = active.reduce((a, b) => a.total + b.total) + inactive
+            console.log(active)
+            active = active.reduce((a, b) => a.total + b.total)
+            resultData = [{ _id: "3", total }, { _id: "1", total: active }, { _id: "2", total: inactive }]
             setResults(resultData)
         }
     }
@@ -49,7 +57,7 @@ export default function SummaryPage() {
                             case "2":
                                 dataSummary = { color: "bg-red-600", "title": "INACTIVE" }
                                 break
-                            case "0":
+                            case "3":
                                 dataSummary = { color: "bg-blue-600", "title": "TOTAL" }
                                 break
                         }
