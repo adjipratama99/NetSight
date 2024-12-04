@@ -71,7 +71,7 @@ export default function Bandwith({ currentData, dates, isReport, deviceIds, setD
                             <DateRangePicker
                                 defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
                                 block
-                                shouldDisableDate={combine(allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss')), allowedMaxDays(1))}
+                                shouldDisableDate={combine(allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss')), allowedMaxDays(2))}
                                 onOk={(value) => {
                                     let params = {...bodyParams, startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss')}
                                     setBodyParams(params)
