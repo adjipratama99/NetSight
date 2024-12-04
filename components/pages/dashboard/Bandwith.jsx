@@ -9,7 +9,7 @@ import { BANDWITH_LIST } from "@/contexts/actions";
 import { DateRangePicker } from "rsuite";
 import { format, parseISO } from "date-fns";
 import Highcharts from 'highcharts'
-const { allowedRange } = DateRangePicker
+const { allowedRange, allowedMaxDays, combine } = DateRangePicker
 
 export default function Bandwith({ currentData, dates, isReport, deviceIds, setDeviceIds }) {
     const [total, setTotal] = useState([]),
@@ -71,7 +71,8 @@ export default function Bandwith({ currentData, dates, isReport, deviceIds, setD
                             <DateRangePicker
                                 defaultValue={[parseISO(dates.startDate), parseISO(dates.endDate)]}
                                 block
-                                disabledDate={allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss'))}
+                                oneTap
+                                shouldDisableDate={combine(allowedRange(subtractDate(new Date(), 'years', 1), format(new Date(), 'yyyy-MM-dd HH:mm:ss')), allowedMaxDays(1))}
                                 onOk={(value) => {
                                     let params = {...bodyParams, startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss')}
                                     setBodyParams(params)
