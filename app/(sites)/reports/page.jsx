@@ -25,7 +25,7 @@ export default function ReportPage() {
     const [deviceIds, setDeviceIds] = useState([])
     const [comboOpen, setComboOpen] = useState(true)
     const [dates, setDate] = useState({ 
-        startDate: subtractDate(new Date(), 'days', 7),
+        startDate: subtractDate(new Date(), 'years', 1),
         endDate: subtractDate(new Date(), 'days', 1)
     })
     const { data, isLoading } = useQuery({
