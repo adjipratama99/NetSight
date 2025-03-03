@@ -62,7 +62,7 @@ export default function DashboardPage() {
     const sidebar = useSidebar()
     const { MapDevice } = useMap()
     const [dates, setDate] = useState({ 
-        startDate: format(subtractDate(new Date(), 'days', 1), 'yyyy-MM-dd 00:00:00'),
+        startDate: format(subtractDate(new Date(), 'years', 1), 'yyyy-MM-dd 00:00:00'),
         endDate: format(new Date(), 'yyyy-MM-dd 23:59:59')
     })
     const [showPopup, setShowPopup] = useState({"update": false})
