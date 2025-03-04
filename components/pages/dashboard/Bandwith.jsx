@@ -76,6 +76,7 @@ export default function Bandwith({ currentData, dates, isReport, deviceIds, setD
                                     let params = {...bodyParams, startDate: format(value[0], 'yyyy-MM-dd HH:mm:ss'), endDate: format(value[1], 'yyyy-MM-dd HH:mm:ss')}
                                     setBodyParams(params)
                                 }}
+                                placement="leftStart"
                                 className="w-[250px]"
                             />
                         </div> : false
